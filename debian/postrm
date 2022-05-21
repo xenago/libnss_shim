@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Fail fast on any error
+set -e
+
+# Remove the shim entries from /etc/nsswitch.conf
+sed -i '/^passwd:/ s/\Wshim$//;s/shim\W\(.*\)/\1/;' /etc/nsswitch.conf
+sed -i '/^group:/ s/\Wshim$//;s/shim\W\(.*\)/\1/;' /etc/nsswitch.conf
+sed -i '/^shadow:/ s/\Wshim$//;s/shim\W\(.*\)/\1/;' /etc/nsswitch.conf

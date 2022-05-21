@@ -1,0 +1,41 @@
+{
+  "databases": {
+    "group": {
+      "functions": {
+        "get_all_entries": {
+          "command": "/bin/bash -c ':'"
+        },
+        "get_entry_by_gid": {
+          "command": "/bin/bash -c ':'"
+        },
+        "get_entry_by_name": {
+          "command": "/bin/bash -c ':'"
+        }
+      }
+    },
+    "passwd": {
+      "functions": {
+        "get_all_entries": {
+          "command": "/bin/bash -c ':'"
+        },
+        "get_entry_by_uid": {
+          "command": "/bin/bash -c ':'"
+        },
+        "get_entry_by_name": {
+          "command": "/bin/bash -c ':'"
+        }
+      }
+    },
+    "shadow": {
+      "functions": {
+        "get_all_entries": {
+          "command": "/bin/bash -c ':'"
+        },
+        "get_entry_by_name": {
+          "command": "/bin/bash -c ':'"
+        }
+      }
+    }
+  },
+  "debug" : false
+}

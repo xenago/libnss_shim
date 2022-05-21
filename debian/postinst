@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Fail fast on any error
+set -e
+
+# Add the shim to supported entries in /etc/nsswitch.conf
+grep '^passwd:.*shim.*' /etc/nsswitch.conf || sed -i '/^passwd:/ s/$/ shim/' /etc/nsswitch.conf
+grep '^group:.*shim.*' /etc/nsswitch.conf || sed -i '/^group:/ s/$/ shim/' /etc/nsswitch.conf
+grep '^shadow:.*shim.*' /etc/nsswitch.conf || sed -i '/^shadow:/ s/$/ shim/' /etc/nsswitch.conf

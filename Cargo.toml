@@ -1,0 +1,39 @@
+[package]
+name = "libnss_shim"
+version = "0.9.0"
+authors = ["Noah Kruiper"]
+edition = "2021"
+description = "NSS module shim to use custom sources for group/passwd/shadow lookups"
+readme = "README.md"
+license-file = "LICENSE"
+repository = "https://github.com/xenago/libnss_shim"
+
+# Reduce size when building for release
+[profile.release]
+strip = true  # Do not include crash/debug symbols
+lto = true  # Perform optimization at linker stage
+codegen-units = 1  # use a single thread
+
+[dependencies]
+lazy_static = "1.4.0"
+libc = "0.2.126"
+libnss = "0.4"
+paste = "1.0.7"
+serde_json = "1.0.81"
+serde = { version = "1.0.81", features = ["derive"] }
+shlex = "1.1.0"
+
+[lib]
+name = "nss_shim"
+crate-type = ["cdylib"]
+
+[package.metadata.deb]
+depends = "base-files, libc6"
+priority = "optional"
+extended-description = "A plugin for the Name Service Switch (NSS) framework that parses the output of commands to resolve queries."
+assets = [
+    ["target/release/libnss_shim.so", "lib/libnss_shim.so.2", "644"],
+    ["default_config/config.json", "etc/libnss_shim/config.json", "640"],
+    ["README.md", "usr/share/doc/libnss_shim/README", "644"],
+]
+maintainer-scripts = "debian"
