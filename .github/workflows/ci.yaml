@@ -1,0 +1,38 @@
+name: ci
+
+# Only build and release if a tag is pushed with a version number like 1.2.3
+on:
+  push:
+    tags:
+      - '[0-9].[0-9].[0-9]'
+
+jobs:
+  build_release:
+    name: build and release
+    runs-on: ubuntu-20.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: set version from tag  # Get the version number automatically from the tag
+        run: |
+          export VERSION=${{github.ref_name}}
+          sed -i "s/0.0.0/$VERSION/g" Cargo.toml
+      - name: cargo build
+        run: |
+          cargo build --release --verbose
+          ls -lah target/release
+      - name: cargo deb
+        run: |
+          cargo install cargo-deb
+          cargo deb --verbose
+          ls -lah target/debian
+      - name: release  # Publish the binary
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')  # Redundant but doesn't really hurt
+        with:
+          body_path: ${{github.workspace}}/changelog/CHANGELOG.txt  # Get the changelog from a file
+          fail_on_unmatched_files: true
+          files: |
+            target/debian/*.deb
