@@ -1,2 +1,3 @@
-- Update README with working downloads
-- Bump version to 1.0.0 for complete release
+- Unify macro doc comment style
+- Remove redundant comments
+- Improve ci def comments

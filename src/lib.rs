@@ -32,8 +32,7 @@ macro_rules! debug_print {
 
 /** Validate config.json
 - If /etc/libnss_shim/config.json exists and is valid JSON, save the deserialized data and debug setting
-- If config.json does not exist, is unreadable, or is not valid JSON, return with NSS code Unavail
- */
+- If config.json does not exist, is unreadable, or is not valid JSON, return with NSS code Unavail */
 macro_rules! validate_config {
     ($deser: ident, $debug: ident) => {
         let $deser : serde_json::Value;
@@ -173,8 +172,7 @@ macro_rules! validate_response {
 - If the expected function/database is not present, return NSS code NotFound
 - If the function is there but no command is defined, return NSS code Unavail
 - If the command is not valid/parseable, return NSS code Unavail
-- If all checks pass, return a Vec of command/args, a Map of env vars, and a working directory
- */
+- If all checks pass, return a Vec of command/args, a Map of env vars, and a working directory */
 macro_rules! parse_config {
     ($config_deser: ident, $target_db: ident, $target_function: ident, $command: ident, $env_vars: ident, $dir: ident, $debug: ident ) => {
         // Define the 'path' in the json to get to the command from the root
@@ -781,8 +779,7 @@ macro_rules! parse_shadow_json {
 /** Run the command&args with the given workdir and env vars.
 - If the code tuple has non-empty strings, instances of the first will be replaced by the second in args and env vars
 - If the command has a runtime error, return NSS code TryAgain
-- If the command succeeds, return the trimmed output
- */
+- If the command succeeds, return the trimmed output */
 macro_rules! run_command_capture_output {
     ($command: ident, $env_vars: ident, $dir: ident, $code: ident, $output: ident, $debug: ident) => {
         // Create the runnable command using the first item in the args (i.e. the base command to run)
@@ -892,7 +889,7 @@ impl GroupHooks for ShimGroup {
         validate_response!(output, option, debug);
         match option {
             Some(deser) => {
-                // Loop through but return after first result since this is supposed to be a single entry
+                // Return after first loop iteration since this is supposed to be a single entry
                 for group_entry in deser.as_object().unwrap().keys() {
                     if gid
                         != match deser[group_entry]["gid"].as_u64() {
@@ -923,8 +920,6 @@ impl GroupHooks for ShimGroup {
                 }
             }
             _ => {
-                // Parse as unix-style format
-                // Only process the first loop iteration since this is supposed to be a single entry
                 for line in output.trim().lines() {
                     if line.matches(":").count() < 3 {
                         debug_print!(
@@ -956,7 +951,6 @@ impl GroupHooks for ShimGroup {
         let database = "group".to_string();
         let function = "get_entry_by_name".to_string();
         parse_config!(config_deser, database, function, command, env_vars, dir, debug);
-        // Set the code for name
         let code = ("<$name>".to_string(), name.clone());
         run_command_capture_output!(command, env_vars, dir, code, output, debug);
         validate_response!(output, option, debug);
@@ -1018,7 +1012,6 @@ impl PasswdHooks for ShimPasswd {
         let database = "passwd".to_string();
         let function = "get_all_entries".to_string();
         parse_config!(config_deser, database, function, command, env_vars, dir, debug);
-        // Since this function does not have a uid/gid/name parameter, set the code as blank
         let code = ("".to_string(), "".to_string());
         run_command_capture_output!(command, env_vars, dir, code, output, debug);
         validate_response!(output, option, debug);
@@ -1059,7 +1052,6 @@ impl PasswdHooks for ShimPasswd {
         let database = "passwd".to_string();
         let function = "get_entry_by_uid".to_string();
         parse_config!(config_deser, database, function, command, env_vars, dir, debug);
-        // Set the code for uid
         let code = ("<$uid>".to_string(), uid.to_string());
         run_command_capture_output!(command, env_vars, dir, code, output, debug);
         validate_response!(output, option, debug);
@@ -1120,7 +1112,6 @@ impl PasswdHooks for ShimPasswd {
         let database = "passwd".to_string();
         let function = "get_entry_by_name".to_string();
         parse_config!(config_deser, database, function, command, env_vars, dir, debug);
-        // Set the code for name
         let code = ("<$name>".to_string(), name.clone());
         run_command_capture_output!(command, env_vars, dir, code, output, debug);
         validate_response!(output, option, debug);
@@ -1177,7 +1168,6 @@ impl ShadowHooks for ShimShadow {
         let database = "shadow".to_string();
         let function = "get_all_entries".to_string();
         parse_config!(config_deser, database, function, command, env_vars, dir, debug);
-        // Since this function does not have a uid/gid/name parameter, set the code as blank
         let code = ("".to_string(), "".to_string());
         run_command_capture_output!(command, env_vars, dir, code, output, debug);
         validate_response!(output, option, debug);
@@ -1190,9 +1180,8 @@ impl ShadowHooks for ShimShadow {
                 }
             }
             _ => {
-                // Parse as shadow file format
                 for line in output.trim().lines() {
-                    // Allowing 7 instead of 8 since the last field is kind of optional
+                    // Allowing 7 instead of 8 since the last field ('reserved') is truly optional
                     if line.matches(":").count() < 7 {
                         debug_print!(
                             format!(
@@ -1208,7 +1197,6 @@ impl ShadowHooks for ShimShadow {
                 }
             }
         };
-        // Shouldn't ever be 0, but good to check
         if shadow_vec.len() > 0 {
             return Response::Success(shadow_vec);
         }
@@ -1221,7 +1209,6 @@ impl ShadowHooks for ShimShadow {
         let database = "shadow".to_string();
         let function = "get_entry_by_name".to_string();
         parse_config!(config_deser, database, function, command, env_vars, dir, debug);
-        // Set the code for name
         let code = ("<$name>".to_string(), name.clone());
         run_command_capture_output!(command, env_vars, dir, code, output, debug);
         validate_response!(output, option, debug);
