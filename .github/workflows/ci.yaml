@@ -11,32 +11,32 @@ jobs:
     name: build and release
     runs-on: ubuntu-20.04  # Build on Debian-based distro
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: set version number from commit tag  # Overwrite the placeholder version number in Cargo.toml with the tag
+      - name: Set version  # Overwrite the placeholder version number in Cargo.toml with the commit tag
         run: |
           export VERSION=${{github.ref_name}}
           sed -i "s/0.0.0/$VERSION/g" Cargo.toml
 
-      - name: cargo build --verbose
+      - name: Cargo build
         run: |
           cargo build --release --verbose
           ls -lah target/release
 
-      - name: cargo deb
+      - name: Cargo deb
         run: |
           cargo install cargo-deb
           cargo deb --verbose
           ls -lah target/debian
 
-      - name: release
+      - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')  # Presumably redundant due to the [0-9] filter, but kept for safety
         with:
-          body_path: ${{github.workspace}}/changelog/CHANGELOG.txt  # Read the latest changelog from a file in the repo
+          body_path: ${{github.workspace}}/changelog/CHANGELOG.txt  # Get the release notes from the changelog file
           fail_on_unmatched_files: true
           files: |
             target/debian/*.deb
