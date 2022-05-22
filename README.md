@@ -12,7 +12,7 @@ details).
 
 ## Demonstration
 
-![libnss_shim GIF demo](https://github.com/xenago/libnss_shim/blob/main/docs/libnss_shim_demo.gif?raw=true)
+![libnss_shim GIF demo](https://raw.githubusercontent.com/xenago/libnss_shim/main/doc/libnss_shim_demo.gif)
 
 ## Background
 
