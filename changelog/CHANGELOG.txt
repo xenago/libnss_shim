@@ -1,3 +1,4 @@
 - Unify macro doc comment style
 - Remove redundant comments
 - Improve ci def comments
+- Add demo gif to README

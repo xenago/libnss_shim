@@ -10,6 +10,10 @@ can output responses to queries either in the typical colon-delimited Unix forma
 command execution is parsed from `stdout` and validated before being passed back to NSS (see the Commands section for
 details).
 
+## Demonstration
+
+![libnss_shim GIF demo](https://github.com/xenago/libnss_shim/blob/main/docs/libnss_shim_demo.gif?raw=true)
+
 ## Background
 
 Custom [PAM](https://www.man7.org/linux/man-pages/man8/pam.8.html) modules alone are not enough to create a custom Linux
