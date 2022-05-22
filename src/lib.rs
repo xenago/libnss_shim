@@ -20,8 +20,7 @@ use shlex;
 //  Macros  //
 //////////////
 
-/** Print out a message if debug is true
- */
+/** Print out a message if debug is true */
 macro_rules! debug_print {
     ( $message:expr, $debug: ident ) => {
         if $debug {
@@ -123,9 +122,9 @@ macro_rules! validate_response {
                 // This appears to be valid JSON, so deserialize using the slower method
                 let deser: serde_json::Value = match serde_json::from_str(&$json){
                     Ok(deser) => deser,
-                    Err(_) => {
+                    Err(e) => {
                         // Unsure if this is actually possible to reach if checked with IgnoredAny, but doesn't hurt
-                        debug_print!(format!("JSON invalid: {}", &$json), $debug);
+                        debug_print!(format!("JSON response: {} is invalid: {}", &$json, e), $debug);
                         return Response::TryAgain;
                     }
                 };
@@ -155,10 +154,11 @@ macro_rules! validate_response {
                     }
                 };
             }
-            Err(_) => {
+            Err(e) => {
                 // This is not valid JSON, so assume it is in passwd type string format
                 // If it has less than 4 chars after trimming whitespace, then it is considered NotFound
                 if $json.trim().len() < 4 {
+                    debug_print!(format!("Response is not json: {}, decoded: {}", &$json, e), $debug);
                     return Response::NotFound;
                 }
                 // It appears to be in passwd file style format, so set the option to None
