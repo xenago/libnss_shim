@@ -22,9 +22,9 @@ lookups earlier in the login flow.
 
 In other words: NSS determines if an account exists, and PAM determines how an account can be accessed.
 
-A good example of this is [SSSD](https://sssd.io), which leverages both NSS and PAM to enable seamless
-LDAP authentication. Integrating directly with NSS can be difficult, so `libnss_shim` was created to allow any command
-that can print to `stdout` in a supported format to be used with NSS.
+A good example of this is [SSSD](https://sssd.io), which leverages both NSS and PAM to enable seamless LDAP
+authentication. Integrating directly with NSS can be difficult, so `libnss_shim` was created to allow any command that
+can print to `stdout` in a supported format to be used with NSS.
 
 ## Installation
 
@@ -60,13 +60,14 @@ that can print to `stdout` in a supported format to be used with NSS.
     ```
    Using the preinstalled `config.json`, `libnss_shim` should have no effect, as the default configuration has commands
    defined that output nothing (see the Configuration section for details). Updates to the config take effect
-   immediately and can be performed after `libnss_shim` has been installed and used.
+   immediately and can be performed at any time after `libnss_shim` has been installed and used, without restarting.
 
-5. Restart any software that uses `/etc/nsswitch.conf`, because it is read-only once per-process and `libnss_shim` is
-   defined there. If simply testing with e.g. `getent` commands, no action may be necessary at all. Once affected
-   programs have restarted, the installation can be tested and used.
+5. By default, `shim` (meaning `libnss_shim`) is defined in `/etc/nsswitch.conf` as the final source for all supported
+   databases. In that file, you can change the access order for each database's sources, remove `shim` from specific
+   locations if not required, etc. Unlike `config.json`, `nsswitch.conf` is read only once per-process, so any software
+   actively using it will need to be started or restarted.
 
-   Restarting the system is often the safest/easiest way to do this:
+   Rebooting the system is often the safest/easiest way to do this:
     ```
     sudo reboot
     ```
@@ -92,8 +93,8 @@ that can print to `stdout` in a supported format to be used with NSS.
    sudo apt remove libnss_shim
    ```
 
-2. If removal/deletion is performed, restarting affected applications is required. Rebooting is an effective way to do
-   this:
+2. If removal/deletion is performed, restarting affected applications is required. A system reboot is an effective way
+   to do this:
    ```
    sudo reboot
    ```
