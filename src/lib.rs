@@ -891,25 +891,25 @@ impl GroupHooks for ShimGroup {
             Some(deser) => {
                 // Return after first loop iteration since this is supposed to be a single entry
                 for group_entry in deser.as_object().unwrap().keys() {
-                    if gid
-                        != match deser[group_entry]["gid"].as_u64() {
+                    if gid != match deser[group_entry]["gid"].as_u64() {
                         Some(x) => x,
                         _ => {
                             debug_print!(
-                                    format!(
-                                        "Returned group data: {} does not contain a valid gid",
-                                        deser
-                                    ),
-                                    debug
-                                );
+                                format!(
+                                    "Returned group data: {} does not contain a valid gid",
+                                    deser
+                                ),
+                                debug
+                            );
                             return Response::TryAgain;
                         }
                     } as u32
                     {
                         debug_print!(
                             format!(
-                                "Returned group data: {} does not contain a valid u32 gid",
-                                deser
+                                "Returned group data: {} does not contain a matching gid: {}",
+                                deser,
+                                gid
                             ),
                             debug
                         );
@@ -1075,8 +1075,9 @@ impl PasswdHooks for ShimPasswd {
                     {
                         debug_print!(
                             format!(
-                                "Returned passwd data: {} does not contain a valid u32 uid",
-                                deser
+                                "Returned passwd data: {} does not contain a matching uid: {}",
+                                deser,
+                                uid
                             ),
                             debug
                         );
