@@ -20,7 +20,7 @@ libc = "0.2.126"
 libnss = "0.4"
 paste = "1.0.7"
 serde_json = "1.0.82"
-serde = { version = "1.0.138", features = ["derive"] }
+serde = { version = "1.0.139", features = ["derive"] }
 shlex = "1.1.0"
 
 [lib]
