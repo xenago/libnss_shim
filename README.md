@@ -234,6 +234,11 @@ If using standard Unix colon-split format, optional fields can be left blank. Wi
 If the defined command ran correctly but no results are found for that query, it is expected to exit normally and print
 either empty JSON `{}` or nothing at all (other than whitespace/newlines) to `stdout`.
 
+Commands and arguments are split according to POSIX shell syntax, but are not run through a shell, so bash-specific
+syntax will not function. For example, a command such as `program1 && program2` will be interpreted as
+running `program1` with arguments `&&` and `program2`. Although it is not recommended due to possible security risks, it
+remains possible to run a shell directly, e.g. `sh -c 'program1 && program2'`.
+
 Here is the expected JSON format from running each database's supported commands, with types indicated. All numbers are
 expected in base-10 integer form and must fit within the ranges of the indicated numeric  `int` types:
 
@@ -314,6 +319,10 @@ expected in base-10 integer form and must fit within the ranges of the indicated
 This NSS plugin runs commands defined in the file `/etc/libnss_shim/config.json`, which is only accessible to `root` by
 default. Ensure that this file, the commands defined inside it, and any other resources related to it remain
 inaccessible to any other users, or those users may be able to run commands as `root`.
+
+By default, commands are not passed through a shell for execution. Although it is possible to run commands like `bash`
+with `libnss_shim`, using a shell is not recommended as this comes the risk of command injection. If a shell is still
+used, the use of environment variables rather than arguments is critical.
 
 ## Useful resources
 
