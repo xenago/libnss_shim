@@ -1,6 +1,0 @@
-- Unify macro doc comment style
-- Remove redundant comments
-- Improve ci def comments
-- Add demo gif to README
-- Add details about nsswitch.conf to README
-- Add more info to debug messages
