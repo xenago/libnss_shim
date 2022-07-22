@@ -236,7 +236,7 @@ either empty JSON `{}` or nothing at all (other than whitespace/newlines) to `st
 
 Commands and arguments are split according to POSIX shell syntax, but are not run through a shell, so bash-specific
 syntax will not function. For example, a command such as `program1 && program2` will be interpreted as
-running `program1` with arguments `&&` and `program2`. Although it is not recommended due to possible security risks, it
+running `program1` with arguments `&&` and `program2`. Although it is not recommended (see the Security section), it
 remains possible to run a shell directly, e.g. `sh -c 'program1 && program2'`.
 
 Here is the expected JSON format from running each database's supported commands, with types indicated. All numbers are
@@ -321,7 +321,7 @@ default. Ensure that this file, the commands defined inside it, and any other re
 inaccessible to any other users, or those users may be able to run commands as `root`.
 
 By default, commands are not passed through a shell for execution. Although it is possible to run commands like `bash`
-with `libnss_shim`, using a shell is not recommended as this comes the risk of command injection. If a shell is still
+with `libnss_shim`, using a shell is not recommended as this comes at the risk of command injection. If a shell is still
 used, the use of environment variables rather than arguments is critical.
 
 ## Useful resources
