@@ -5,10 +5,10 @@ with the output of custom commands. Both JSON and the standard colon-separated *
 
 ## Overview
 
-`libnss_shim` is an NSS/nsswitch service that runs arbitrary commands defined per-function in `config.json`. Commands
-can output responses to queries either in the typical colon-delimited Unix format, or in JSON. The output of each
-command execution is parsed from `stdout` and validated before being passed back to NSS (see the Commands section for
-details).
+`libnss_shim` is an adapter to make integration with NSS easier. It is an NSS/nsswitch service that runs commands
+defined per-function in `config.json`. Commands can output responses to queries either in the typical colon-delimited
+Unix format, or in JSON. The output of each command execution is parsed from `stdout` and validated before being passed
+back to NSS (see the Commands section for details).
 
 ## Demonstration
 
@@ -31,9 +31,9 @@ can print to `stdout` in a supported format to be used with NSS.
 ### Compatibility notes
 
 - Tested on Debian-based GNU/Linux distributions
-- Built for `amd64` architecture
-- If `.deb` packages are not supported on the desired target platform, `libnss_shim` might be usable if the assets are
-  installed as described in `Cargo.toml` prior to running the `debian/postinst`  script, but this has not been tested
+- Builds for `amd64` architecture
+- If `.deb` packages are not supported on the desired target platform, `libnss_shim` might be usable if the `assets` as
+  described in `Cargo.toml` are installed prior to running the `debian/postinst`  script, but this has not been tested
 - To request support for a different configuration, please create a GitHub Issue
 
 ### Installation steps
@@ -139,8 +139,8 @@ Using only that information, here is an extremely basic test example of `config.
 }
 ```
 
-The command defined for `get_all_entries` prints out a single line to `stdout`, describing a nonexistent group
-called `testgroup` with `gid=1008` and two fake members. That output is then captured by `libss_shim` and returned
+The command defined for `get_all_entries` prints out a single line to `stdout`, describing a fake group
+called `testgroup` with `gid=1008` and two members. That output is then captured by `libss_shim` and returned
 to `NSS` whenever a call is made requesting all the group entries (e.g. `getent group`).
 
 To support command execution, the following options can be set globally and overridden for specific databases and/or
@@ -149,8 +149,7 @@ functions:
 - `"env"`: Add environment variables to the set inherited from `libnss_shim`
 - `"workdir"`: Set the working directory before running the command
 
-To enable debug printing, `"debug": true` can be set at the global level. This is disabled by default, since information
-is intentionally printed to the user terminal when it is enabled.
+To enable debug printing to the user terminal, `"debug": true` can be set at the global level. This is `false` by default.
 
 The following is a much more complex fake example of `/etc/libnss_shim/config.json` - more databases and functions are
 defined (but with made-up commands this time), `debug` output is enabled, and there are global defaults set for `env`
@@ -198,8 +197,7 @@ defined (but with made-up commands this time), `debug` output is enabled, and th
   },
   "debug": true,
   "env": {
-    "PATH": "/set/default/PATH/var/here:/for/all/databases:/and/their/functions",
-    "VARIABLE": "default_value"
+    "SOME_VARIABLE": "set this variable for all databases and their functions"
   },
   "workdir": "/folder/to/execute/in"
 }
