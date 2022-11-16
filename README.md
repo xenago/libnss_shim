@@ -149,11 +149,14 @@ functions:
 - `"env"`: Add environment variables to the set inherited from `libnss_shim`
 - `"workdir"`: Set the working directory before running the command
 
-To enable debug printing to the user terminal, `"debug": true` can be set at the global level. This is `false` by default.
+To enable debug printing to the user terminal, `"debug": true` can be set at the global level. This is `false` by
+default.
 
 The following is a much more complex fake example of `/etc/libnss_shim/config.json` - more databases and functions are
-defined (but with made-up commands this time), `debug` output is enabled, and there are global defaults set for `env`
-/`workdir` with some database/function level overrides:
+defined (but with made-up commands this time), codes are used to pass data at runtime as arguments/environment
+variables, `debug` output is enabled, and there are global defaults set for `env` & `workdir` with some
+database/function
+level overrides:
 
 ```
 {
@@ -214,7 +217,7 @@ by `group`, `passwd`, etc. on
 a [variety of *nix systems](https://www.ibm.com/docs/en/aix/7.2?topic=passwords-using-etcpasswd-file) is available
 online.
 
-Although it is best to set all fields explicitly to avoid unexpected issues with default/unset fields (nobody wants a
+Although it is best to set all fields explicitly to avoid unexpected issues with default/unset values (nobody wants a
 password to be blank for some reason), only the following fields are required in command output:
 
 - `group`
@@ -315,12 +318,13 @@ expected in base-10 integer form and must fit within the ranges of the indicated
 ## Security
 
 This NSS plugin runs commands defined in the file `/etc/libnss_shim/config.json`, which is only accessible to `root` by
-default. Ensure that this file, the commands defined inside it, and any other resources related to it remain
-inaccessible to any other users, or those users may be able to run commands as `root`.
+default. Ensure that this file, the commands defined inside it, and any other related resources remain inaccessible to
+other users, or the system may be vulnerable to privilege escalation attacks.
 
-By default, commands are not passed through a shell for execution. Although it is possible to run commands like `bash`
-with `libnss_shim`, using a shell is not recommended as this comes at the risk of command injection. If a shell is still
-used, the use of environment variables rather than arguments is critical.
+Commands are not passed through a shell for execution. Although it is certainly possible to run software like `bash`
+with `libnss_shim`, using a shell is not recommended as this comes at the risk of command injection. If a shell is used
+despite this, then codes used to pass data (like `<$name>`) are recommended to be set using environment variables rather
+than arguments.
 
 ## Useful resources
 
