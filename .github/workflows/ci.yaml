@@ -28,7 +28,6 @@ jobs:
 
       - name: Cargo deb
         run: |
-          cargo install cargo-deb
           cargo deb --verbose
           ls -lah target/debian
 

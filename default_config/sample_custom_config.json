@@ -1,0 +1,11 @@
+{
+  "databases": {
+    "group": {
+      "functions": {
+        "get_all_entries": {
+          "command": "echo 'testgroup::1008:fake-username,another-user'"
+        }
+      }
+    }
+  }
+}

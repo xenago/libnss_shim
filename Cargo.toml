@@ -15,12 +15,13 @@ lto = true  # Perform optimization at linker stage
 codegen-units = 1  # use a single thread
 
 [dependencies]
+cargo-deb = "1.42.2"
 lazy_static = "1.4.0"
 libc = "0.2.140"
 libnss = "0.4"
 paste = "1.0.12"
-serde_json = "1.0.94"
 serde = { version = "1.0.157", features = ["derive"] }
+serde_json = "1.0.94"
 shlex = "1.1.0"
 
 [lib]
@@ -28,6 +29,7 @@ name = "nss_shim"
 crate-type = ["cdylib"]
 
 [package.metadata.deb]
+name = "libnss_shim"
 depends = "base-files, libc6"
 priority = "optional"
 extended-description = "A plugin for the Name Service Switch (NSS) framework that parses the output of commands to resolve queries."
