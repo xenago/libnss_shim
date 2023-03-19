@@ -321,10 +321,11 @@ This NSS plugin runs commands defined in the file `/etc/libnss_shim/config.json`
 default. Ensure that this file, the commands defined inside it, and any other related resources remain inaccessible to
 other users, or the system may be vulnerable to privilege escalation attacks.
 
-Commands are not passed through a shell for execution. Although it is certainly possible to run software like `bash`
-with `libnss_shim`, using a shell is not recommended as this comes at the risk of command injection. If a shell is used
-despite this, then codes used to pass data (like `<$name>`) are recommended to be set using environment variables rather
-than arguments.
+It is recommended to pass data (like `<$name>`) using environment variables rather than arguments, except for
+testing purposes. Environment variables are generally private, whereas commands/launch args are not.
+
+Commands are not passed through a shell for execution. Although it is possible to run software like `bash`
+with `libnss_shim`, using a shell is not recommended as this comes with additional risks such as command injection.
 
 ## Useful resources
 
