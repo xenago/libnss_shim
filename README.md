@@ -42,16 +42,16 @@ can print to `stdout` in a supported format to be used with NSS.
 
 2. Download the latest release produced by GitHub Actions:
     ```
-    wget https://github.com/xenago/libnss_shim/releases/download/1.0.3/libnss-shim_1.0.3_amd64.deb
+    wget https://github.com/xenago/libnss_shim/releases/download/1.0.4/libnss_shim_1.0.4_amd64.deb
     ```
 
 3. Install it directly with `dpkg` or through `apt`:
     ```
-    sudo dpkg -i libnss-shim_1.0.3_amd64.deb
+    sudo dpkg -i libnss_shim_1.0.4_amd64.deb
     ```
    or
     ```
-    sudo apt install ./libnss-shim_1.0.3_amd64.deb
+    sudo apt install ./libnss_shim_1.0.4_amd64.deb
     ```
 
 4. Configure the shim by importing a custom `config.json`:
