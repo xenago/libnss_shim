@@ -1,3 +1,0 @@
-- Add sample config used in demo GIF
-- Pin cargo-deb version in ci.yaml
-- Set name explicitly in deb metadata

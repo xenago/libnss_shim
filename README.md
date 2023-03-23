@@ -8,7 +8,8 @@ with the output of custom commands. Both JSON and the standard colon-separated *
 `libnss_shim` is an adapter to make integration with NSS easier. It is an NSS/nsswitch service that runs commands
 defined per-function in `config.json`. Commands can output responses to queries either in the typical colon-delimited
 Unix format, or in JSON. The output of each command execution is parsed from `stdout` and validated before being passed
-back to NSS (see the Commands section for details).
+back to NSS (see the Commands section for details). The `group`, `passwd`, and `shadow` NSS databases/services are
+supported (see Configuration section for details)
 
 ## Demonstration
 
