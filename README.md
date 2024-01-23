@@ -48,11 +48,11 @@ can print to `stdout` in a supported format to be used with NSS.
 
 3. Install it directly with `dpkg` or through `apt`:
     ```
-    sudo dpkg -i libnss_shim_1.0.4_amd64.deb
+    sudo dpkg -i libnss_shim_1.0.5_amd64.deb
     ```
    or
     ```
-    sudo apt install ./libnss_shim_1.0.4_amd64.deb
+    sudo apt install ./libnss_shim_1.0.5_amd64.deb
     ```
 
 4. Configure the shim by importing a custom `config.json`:

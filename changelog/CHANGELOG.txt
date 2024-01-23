@@ -1,4 +1,1 @@
-- Update `shlex` to `1.3.0` following a security advisory
-- Bump to latest versions of `libc`, `paste`, `serde`, `serde_json`
-- Bump `cargo-deb` to `1.44.1`, as `2.x` has breaking changes
-- Add `rust-toolchain.toml`
+
