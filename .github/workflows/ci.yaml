@@ -28,7 +28,7 @@ jobs:
 
       - name: Cargo deb
         run: |
-          cargo install --version 1.42.2 cargo-deb
+          cargo install --version 1.44.1 cargo-deb
           cargo deb --verbose
           ls -lah target/debian
 
