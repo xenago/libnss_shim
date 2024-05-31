@@ -281,9 +281,9 @@ expected in base-10 integer form and must fit within the ranges of the indicated
           }
         ```
 
-    - `get_entry_by_gid(int gid)` - Response should be the same format as `get_all_entries()`, but only a single record
+    - `get_entry_by_gid(uint32 gid)` - Response should be the same format as `get_all_entries()`, but only a single record
 
-    - `get_entry_by_name(str name)` - Response should be the same format as `get_entry_by_gid(int gid)`
+    - `get_entry_by_name(str name)` - Response should be the same format as `get_entry_by_gid(uint32 gid)`
 
 - `passwd`
     - `get_all_entries()`
@@ -304,9 +304,9 @@ expected in base-10 integer form and must fit within the ranges of the indicated
           }
         ```
 
-    - `get_entry_by_uid(int uid)` - Response should be the same format as `get_all_entries()`, but only a single record
+    - `get_entry_by_uid(uint32 uid)` - Response should be the same format as `get_all_entries()`, but only a single record
 
-    - `get_entry_by_name(str name)` - Response should be the same format as `get_entry_by_uid(int uid)`
+    - `get_entry_by_name(str name)` - Response should be the same format as `get_entry_by_uid(uint32 uid)`
 
 - `shadow`
     - `get_all_entries()`
