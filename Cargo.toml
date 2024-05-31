@@ -17,7 +17,7 @@ codegen-units = 1  # use a single thread
 [dependencies]
 lazy_static = "1.4.0"
 libc = "0.2.155"
-libnss = "0.4"
+libnss = "0.8.0"
 paste = "1.0.15"
 serde = { version = "1.0.203", features = ["derive"] }
 serde_json = "1.0.117"

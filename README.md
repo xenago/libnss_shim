@@ -259,7 +259,7 @@ running `program1` with arguments `&&` and `program2`. Although it is not recomm
 remains possible to run a shell directly, e.g. `sh -c 'program1 && program2'`.
 
 Here is the expected JSON format from running each database's supported commands, with types indicated. All numbers are
-expected in base-10 integer form and must fit within the ranges of the indicated numeric  `int` types:
+expected in base-10 integer form and must fit within the ranges of the indicated numeric  `int` types (`isize` and `usize` are platform-dependent and can be 32 or 64-bits):
 
 - `group`
     - `get_all_entries()`
@@ -315,13 +315,13 @@ expected in base-10 integer form and must fit within the ranges of the indicated
           {
             "first-username-here": {
               "passwd": (str),
-              "last_change": (int64),
-              "change_min_days": (int64),
-              "change_max_days": (int64),
-              "change_warn_days": (int64),
-              "change_inactive_days": (int64),
-              "expire_date": (int64),
-              "reserved": (uint64)
+              "last_change": (isize),
+              "change_min_days": (isize),
+              "change_max_days": (isize),
+              "change_warn_days": (isize),
+              "change_inactive_days": (isize),
+              "expire_date": (isize),
+              "reserved": (usize)
             },
             "username-two": {
               ...
@@ -359,7 +359,7 @@ I generally find it easiest to run `build.sh` inside a temporary container:
 
 3. Run the build script inside a temporary container, setting `LIBNSS_SHIM_VERSION` and the cloned repo path as desired:
 
-       sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build.sh
+       sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build.sh
 
 4. The build script will output packages in the following subdirectories of the cloned repo:
 
@@ -374,10 +374,12 @@ I generally find it easiest to run `build.sh` inside a temporary container:
     - The GNU C [library](https://www.gnu.org/software/libc/manual/html_node/NSS-Modules-Interface.html)
 - *Actions in the NSS configuration*
     - The GNU C [library](https://www.gnu.org/software/libc/manual/html_node/Actions-in-the-NSS-configuration.html)
-- Rust bindings for `libnss`
+- *Rust bindings for creating libnss modules*
     - The `libnss` [crate](https://crates.io/crates/libnss)
-- Packaging to `.deb` with Rust
+- *Debian packages from Cargo projects*
     - The `cargo-deb` [crate](https://crates.io/crates/cargo-deb)
+- *Generate a binary RPM package (.rpm) from Cargo projects*
+    - The `cargo-generate-rpm` [crate](https://crates.io/crates/cargo-generate-rpm)
 - Example of a `libnss` plugin produced with Rust and packaged as `.deb`
     - The `nss-wiregarden` [crate](https://crates.io/crates/libnss-wiregarden)
 - Example of parsing `passwd` and `group` formats with Rust

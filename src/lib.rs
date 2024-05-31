@@ -4,15 +4,20 @@ extern crate lazy_static;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
-use std::process::{Command, Stdio};
+use std::process::Command;
+use std::process::Stdio;
+use std::usize;
 
-use libnss::group::{Group, GroupHooks};
+use libnss::group::Group;
+use libnss::group::GroupHooks;
 use libnss::interop::Response;
 use libnss::libnss_group_hooks;
 use libnss::libnss_passwd_hooks;
 use libnss::libnss_shadow_hooks;
-use libnss::passwd::{Passwd, PasswdHooks};
-use libnss::shadow::{Shadow, ShadowHooks};
+use libnss::passwd::Passwd;
+use libnss::passwd::PasswdHooks;
+use libnss::shadow::Shadow;
+use libnss::shadow::ShadowHooks;
 
 use shlex;
 
@@ -424,7 +429,7 @@ macro_rules! parse_shadow_format {
             },
             reserved: match $entries.next().and_then(|s| s.parse().ok()) {
                 Some(s) => s,
-                _ => u64::MAX,
+                _ => usize::MAX,
             },
         }
     };
@@ -626,7 +631,19 @@ macro_rules! parse_shadow_json {
             .any(|x| x == "last_change")
         {
             last_change = match $deser[$shadow_entry]["last_change"].as_i64() {
-                Some(x) => x,
+                Some(x) => match x.try_into(){
+                    Ok(y) => { y },
+                    Err(e) => {
+                        debug_print!(
+                            format!(
+                                "last_change cannot be parsed as isize: {}",
+                                e
+                            ),
+                            $debug
+                        );
+                        return Response::TryAgain;
+                    }
+                },
                 _ => {
                     debug_print!(
                         format!(
@@ -647,7 +664,19 @@ macro_rules! parse_shadow_json {
             .any(|x| x == "change_min_days")
         {
             change_min_days = match $deser[$shadow_entry]["change_min_days"].as_i64() {
-                Some(x) => x,
+                Some(x) => match x.try_into(){
+                    Ok(y) => { y },
+                    Err(e) => {
+                        debug_print!(
+                            format!(
+                                "change_min_days cannot be parsed as isize: {}",
+                                e
+                            ),
+                            $debug
+                        );
+                        return Response::TryAgain;
+                    }
+                },
                 _ => {
                     debug_print!(
                         format!(
@@ -668,7 +697,19 @@ macro_rules! parse_shadow_json {
             .any(|x| x == "change_max_days")
         {
             change_max_days = match $deser[$shadow_entry]["change_max_days"].as_i64() {
-                Some(x) => x,
+                Some(x) => match x.try_into(){
+                    Ok(y) => { y },
+                    Err(e) => {
+                        debug_print!(
+                            format!(
+                                "change_max_days cannot be parsed as isize: {}",
+                                e
+                            ),
+                            $debug
+                        );
+                        return Response::TryAgain;
+                    }
+                },
                 _ => {
                     debug_print!(
                         format!(
@@ -689,7 +730,19 @@ macro_rules! parse_shadow_json {
             .any(|x| x == "change_warn_days")
         {
             change_warn_days = match $deser[$shadow_entry]["change_warn_days"].as_i64() {
-                Some(x) => x,
+                Some(x) => match x.try_into(){
+                    Ok(y) => { y },
+                    Err(e) => {
+                        debug_print!(
+                            format!(
+                                "change_warn_days cannot be parsed as isize: {}",
+                                e
+                            ),
+                            $debug
+                        );
+                        return Response::TryAgain;
+                    }
+                },
                 _ => {
                     debug_print!(
                         format!(
@@ -710,7 +763,19 @@ macro_rules! parse_shadow_json {
             .any(|x| x == "change_inactive_days")
         {
             change_inactive_days = match $deser[$shadow_entry]["change_inactive_days"].as_i64() {
-                Some(x) => x,
+                Some(x) => match x.try_into(){
+                    Ok(y) => { y },
+                    Err(e) => {
+                        debug_print!(
+                            format!(
+                                "change_inactive_days cannot be parsed as isize: {}",
+                                e
+                            ),
+                            $debug
+                        );
+                        return Response::TryAgain;
+                    }
+                },
                 _ => {
                     debug_print!(
                         format!(
@@ -731,7 +796,19 @@ macro_rules! parse_shadow_json {
             .any(|x| x == "expire_date")
         {
             expire_date = match $deser[$shadow_entry]["expire_date"].as_i64() {
-                Some(x) => x,
+                Some(x) => match x.try_into(){
+                    Ok(y) => { y },
+                    Err(e) => {
+                        debug_print!(
+                            format!(
+                                "expire_date cannot be parsed as isize: {}",
+                                e
+                            ),
+                            $debug
+                        );
+                        return Response::TryAgain;
+                    }
+                },
                 _ => {
                     debug_print!(
                         format!(
@@ -744,7 +821,7 @@ macro_rules! parse_shadow_json {
                 }
             };
         }
-        let mut reserved = u64::MAX;
+        let mut reserved = usize::MAX;
         if $deser[$shadow_entry]
             .as_object()
             .unwrap()
@@ -752,7 +829,19 @@ macro_rules! parse_shadow_json {
             .any(|x| x == "reserved")
         {
             reserved = match $deser[$shadow_entry]["reserved"].as_u64() {
-                Some(x) => x,
+                Some(x) => match x.try_into(){
+                    Ok(y) => { y },
+                    Err(e) => {
+                        debug_print!(
+                            format!(
+                                "expire_date cannot be parsed as usize: {}",
+                                e
+                            ),
+                            $debug
+                        );
+                        return Response::TryAgain;
+                    }
+                },
                 _ => {
                     debug_print!(
                         format!("Unable to parse reserved: {} for shadow JSON", reserved),
@@ -1058,8 +1147,7 @@ impl PasswdHooks for ShimPasswd {
         match option {
             Some(deser) => {
                 for passwd_entry in deser.as_object().unwrap().keys() {
-                    if uid
-                        != match deser[passwd_entry]["uid"].as_u64() {
+                    if uid != match deser[passwd_entry]["uid"].as_u64() {
                         Some(x) => x,
                         _ => {
                             debug_print!(
