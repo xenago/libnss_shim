@@ -678,7 +678,7 @@ Public License instead of this License.  But first, please read
 The following notice applies to all files in the package, unless a different copyright notice is defined within:
 
 libnss_shim
-Copyright (c) 2023 Noah Kruiper
+Copyright (c) 2024 Noah Kruiper
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

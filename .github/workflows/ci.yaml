@@ -10,8 +10,13 @@ jobs:
   build_release:
     name: build and release
     runs-on: ubuntu-20.04  # Build on Debian-based distro
+    container: quay.io/pypa/manylinux2014_x86_64  # Use a container with glibc 2.17
     steps:
-      - name: Checkout
+
+      - name: Show GLIBC  # Confirm glibc version
+        run: ldd --version
+
+      - name: Checkout  # Clone repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -21,22 +26,37 @@ jobs:
           export VERSION=${{github.ref_name}}
           sed -i "s/0.0.0/$VERSION/g" Cargo.toml
 
-      - name: Cargo build
+      - name: Install stable toolchain  # Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Cargo build  # Release build
         run: |
           cargo build --release --verbose
           ls -lah target/release
 
-      - name: Cargo deb
+      - name: Cargo deb  # deb package
         run: |
           cargo install --version 1.44.1 cargo-deb
           cargo deb --verbose
           ls -lah target/debian
 
-      - name: Release
+      - name: Cargo rpm  # RPM package
+        run: |
+          cargo install --version 0.14.0 cargo-generate-rpm
+          strip -s target/release/libnss_shim.so
+          cargo generate-rpm --payload-compress none
+          ls -lah target/generate-rpm
+
+      - name: Release  # Publish GitHub release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')  # Presumably redundant due to the [0-9] filter, but kept for safety
+        if: startsWith(github.ref, 'refs/tags/')  # Presumably redundant due to the `on: push: tags:` filter, but kept for safety
         with:
-          body_path: ${{github.workspace}}/changelog/CHANGELOG.txt  # Get the release notes from the changelog file
-          fail_on_unmatched_files: true
+          body_path: ${{github.workspace}}/changelog/CHANGELOG.txt  # Add the release notes from the changelog file
+          fail_on_unmatched_files: true  # Ensure all packages built, to avoid publishing an incomplete release
           files: |
             target/debian/*.deb
+            target/generate-rpm/*.rpm

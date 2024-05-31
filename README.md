@@ -31,28 +31,45 @@ can print to `stdout` in a supported format to be used with NSS.
 
 ### Compatibility notes
 
-- Tested on Debian-based GNU/Linux distributions
+- Tested on:
+    - CentOS 7
+    - AlmaLinux 8
+    - AlmaLinux 9
+    - Debian 11
+    - Debian 12
+    - Ubuntu 20.04
+    - Ubuntu 22.04
+    - Ubuntu 24.04
 - Builds for `amd64` architecture
-- If `.deb` packages are not supported on the desired target platform, `libnss_shim` might be usable if the `assets` as
-  described in `Cargo.toml` are installed prior to running the `debian/postinst`  script, but this has not been tested
+- Packaged in `.deb` and `.rpm` formats
+- If available packages do not work on a target platform, `libnss_shim` might be usable if the `assets` are installed
+  as described in `Cargo.toml` prior to running the `debian/postinst` script, but this has not been tested extensively.
 - To request support for a different configuration, please create a GitHub Issue
 
 ### Installation steps
 
 1. Prepare the commands/software that will be triggered by `libnss_shim` (see the Commands section for details).
 
-2. Download the latest release produced by GitHub Actions:
+2. Download the latest release produced by GitHub Actions.
+
+   **deb:**
     ```
-    wget https://github.com/xenago/libnss_shim/releases/download/1.0.5/libnss_shim_1.0.5_amd64.deb
+    wget https://github.com/xenago/libnss_shim/releases/download/1.1.0/libnss_shim_1.1.0_amd64.deb
+    ```
+   **RPM:**
+    ```
+    wget https://github.com/xenago/libnss_shim/releases/download/1.1.0/libnss_shim-1.1.0-1.x86_64.rpm
     ```
 
-3. Install it directly with `dpkg` or through `apt`:
+3. Install it directly `dpkg` or `rpm`.
+
+   **deb:**
     ```
-    sudo dpkg -i libnss_shim_1.0.5_amd64.deb
+    sudo dpkg -i libnss_shim_1.1.0_amd64.deb
     ```
-   or
+   **RPM:**
     ```
-    sudo apt install ./libnss_shim_1.0.5_amd64.deb
+    sudo rpm -i ./libnss_shim-1.1.0-1.x86_64.rpm
     ```
 
 4. Configure the shim by importing a custom `config.json`:
@@ -328,11 +345,34 @@ testing purposes. Environment variables are generally private, whereas commands/
 Commands are not passed through a shell for execution. Although it is possible to run software like `bash`
 with `libnss_shim`, using a shell is not recommended as this comes with additional risks such as command injection.
 
+## Development
+
+When building locally, using [`act`](https://github.com/nektos/act) can be helpful to run `.github/ci.yaml` directly.
+Depending on your configuration, some tweaks may be required to enable it to build successfully.
+
+I generally find it easiest to run `build.sh` inside a temporary container:
+
+1. Ensure `Docker` is installed and available
+2. Ensure `libnss_shim` is cloned:
+
+       git clone https://github.com/xenago/libnss_shim.git
+
+3. Run the build script inside a temporary container, setting `LIBNSS_SHIM_VERSION` and the cloned repo path as desired:
+
+       sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build.sh
+
+4. The build script will output packages in the following subdirectories of the cloned repo:
+
+   * `target/debian/*.deb` 
+   * `target/generate-rpm/*.rpm`
+
 ## Useful resources
 
-- NSS Modules Interface
+- *Building Rust binaries in CI that work with older GLIBC*
+  - Jakub Beránek, AKA Kobzol's [blog](https://kobzol.github.io/rust/ci/2021/05/07/building-rust-binaries-in-ci-that-work-with-older-glibc.html)
+- *NSS Modules Interface*
     - The GNU C [library](https://www.gnu.org/software/libc/manual/html_node/NSS-Modules-Interface.html)
-- Actions in the NSS configuration
+- *Actions in the NSS configuration*
     - The GNU C [library](https://www.gnu.org/software/libc/manual/html_node/Actions-in-the-NSS-configuration.html)
 - Rust bindings for `libnss`
     - The `libnss` [crate](https://crates.io/crates/libnss)
@@ -342,11 +382,11 @@ with `libnss_shim`, using a shell is not recommended as this comes with addition
     - The `nss-wiregarden` [crate](https://crates.io/crates/libnss-wiregarden)
 - Example of parsing `passwd` and `group` formats with Rust
     - The `parsswd` [crate](https://crates.io/crates/parsswd)
-- Testing NSS modules in glibc
+- *Testing NSS modules in glibc*
     - Geoffrey Thomas's [blog](https://ldpreload.com/blog/testing-glibc-nsswitch)
-- NSS - Debathena (useful description of NSS and how it fits into their architecture)
+- *NSS - Debathena* (useful description of NSS and how it fits into their architecture)
     - MIT Debathena [wiki](https://debathena.mit.edu/trac/wiki/NSS)
-- Debathena hacks (links to more NSS-related code for their project)
+- *Debathena hacks* (links to more NSS-related code for their project)
     - MIT Debathena [website](https://debathena.mit.edu/hacks)
 - Debathena NSS module source example
     - MIT Debathena [repository](https://debathena.mit.edu/packages/debathena/libnss-afspag/libnss-afspag-1.0/)

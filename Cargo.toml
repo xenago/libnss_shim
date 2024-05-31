@@ -5,7 +5,7 @@ authors = ["Noah Kruiper"]
 edition = "2021"
 description = "NSS module shim to use custom sources for group/passwd/shadow lookups"
 readme = "README.md"
-license-file = "LICENSE"
+license = "GPL-3.0-or-later"
 repository = "https://github.com/xenago/libnss_shim"
 
 # Reduce size when building for release
@@ -16,11 +16,11 @@ codegen-units = 1  # use a single thread
 
 [dependencies]
 lazy_static = "1.4.0"
-libc = "0.2.152"
+libc = "0.2.155"
 libnss = "0.4"
-paste = "1.0.14"
-serde = { version = "1.0.195", features = ["derive"] }
-serde_json = "1.0.111"
+paste = "1.0.15"
+serde = { version = "1.0.203", features = ["derive"] }
+serde_json = "1.0.117"
 shlex = "1.3.0"
 
 [lib]
@@ -37,4 +37,15 @@ assets = [
     ["default_config/config.json", "etc/libnss_shim/config.json", "640"],
     ["README.md", "usr/share/doc/libnss_shim/README", "644"],
 ]
+conf-files = ["etc/libnss_shim/config.json"]
 maintainer-scripts = "debian"
+
+[package.metadata.generate-rpm]
+summary = "A plugin for the Name Service Switch (NSS) framework that parses the output of commands to resolve queries."
+assets = [
+    { source = "target/release/libnss_shim.so", dest = "/lib64/libnss_shim.so.2", mode = "644", config = false, doc = false, user = "root", group = "root" },
+    { source = "default_config/config.json", dest = "/etc/libnss_shim/config.json", mode = "640", config = true, doc = false, user = "root", group = "root" },
+    { source = "README.md", dest = "/usr/share/doc/libnss_shim/README", mode = "644", config = false, doc = true, user = "root", group = "root" },
+]
+post_install_script = "debian/postinst"
+post_uninstall_script = "debian/postrm"
