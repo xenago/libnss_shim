@@ -35,7 +35,6 @@ dependencies = [
 name = "libnss_shim"
 version = "0.0.0"
 dependencies = [
- "lazy_static",
  "libc",
  "libnss",
  "paste",

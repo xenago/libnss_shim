@@ -1,3 +1,4 @@
 - Bump `libnss` to `0.8.0` - required code changes
 - Required change: 64-bit integer types to platform-dependent `size` pointer types
+- Remove `lazy_static` dependency
 - Add additional resource, update formatting of `README.md`

@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate lazy_static;
-
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
@@ -18,7 +15,6 @@ use libnss::passwd::Passwd;
 use libnss::passwd::PasswdHooks;
 use libnss::shadow::Shadow;
 use libnss::shadow::ShadowHooks;
-
 use shlex;
 
 //////////////
@@ -930,7 +926,7 @@ impl GroupHooks for ShimGroup {
         let code = ("".to_string(), "".to_string());
         // Run the command defined in the config and capture the output as String
         run_command_capture_output!(command, env_vars, dir, code, output, debug);
-        // Validate the command output and determine if if it is JSON or not
+        // Validate the command output and determine if it is JSON or not
         validate_response!(output, option, debug);
         let mut group_vec: Vec<Group> = Vec::new();
         match option {
@@ -963,7 +959,7 @@ impl GroupHooks for ShimGroup {
         if group_vec.len() > 0 {
             return Response::Success(group_vec);
         }
-        debug_print!(format!("Returned group data is invalid"), debug);
+        debug_print!("Returned group data is invalid".to_string(), debug);
         return Response::TryAgain;
     }
 
@@ -1025,7 +1021,7 @@ impl GroupHooks for ShimGroup {
                 }
                 // Shouldn't happen since this implies the text had no lines
                 debug_print!(
-                    format!("Returned group data does not contain valid strings"),
+                    "Returned group data does not contain valid strings".to_string(),
                     debug
                 );
                 return Response::TryAgain;
@@ -1077,7 +1073,10 @@ impl GroupHooks for ShimGroup {
                     return Response::Success(parse_group_format!(entries, debug));
                 }
                 debug_print!(
-                    format!("Returned group data does not match expected unix form"),
+                    format!(
+                        "Returned group data does not match expected unix form: {}",
+                        output.trim()
+                    ),
                     debug
                 );
                 return Response::TryAgain;
@@ -1132,7 +1131,7 @@ impl PasswdHooks for ShimPasswd {
         if passwd_vec.len() > 0 {
             return Response::Success(passwd_vec);
         }
-        debug_print!(format!("Returned passwd data is invalid"), debug);
+        debug_print!("Returned passwd data is invalid".to_string(), debug);
         return Response::TryAgain;
     }
 
@@ -1289,7 +1288,7 @@ impl ShadowHooks for ShimShadow {
         if shadow_vec.len() > 0 {
             return Response::Success(shadow_vec);
         }
-        debug_print!(format!("Returned shadow data is invalid"), debug);
+        debug_print!("Returned shadow data is invalid".to_string(), debug);
         return Response::TryAgain;
     }
 
