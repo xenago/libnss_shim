@@ -361,9 +361,9 @@ I generally find it easiest to run `build.sh` inside a temporary container:
 
 3. Run the build script inside a temporary container, setting `LIBNSS_SHIM_VERSION` and the cloned repo path as desired:
 
-       sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim -v /var/run/docker.sock:/var/run/docker.sock --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build.sh
+       sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build.sh
 
-   Note that this requires 
+   Note: [the `manylinux2014` container](https://github.com/pypa/manylinux) is available for various architectures.
 
 4. The build script will output packages in the following subdirectories of the cloned repo:
 
