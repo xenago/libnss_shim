@@ -63,7 +63,7 @@ can print to `stdout` in a supported format to be used with NSS.
    **Full table:**
 
    | Architecture | Package | Link                                                                                                                               |
-          |--------------|---------|------------------------------------------------------------------------------------------------------------------------------------|
+   |--------------|---------|------------------------------------------------------------------------------------------------------------------------------------|
    | `amd64`      | `deb`   | [`libnss_shim_1.2.0_amd64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim_1.2.0_amd64.deb)         |
    | `amd64`      | `RPM`   | [`libnss_shim-1.2.0-1.x86_64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim-1.2.0-1.x86_64.rpm)   |
    | `aarch64`    | `deb`   | [`libnss_shim_1.2.0_arm64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim_1.2.0_arm64.deb)         |
@@ -159,8 +159,9 @@ commands run by `libnss_shim`:
 - `<$name>`
 - `<$uid>`
 
-Using only that information, here is an extremely basic test example of `config.json` - one database is defined, `group`
-, with just a single function, `get_all_entries`:
+Using only that information, here is the
+[extremely basic test example of `config.json`](default_config/sample_custom_config.json) - one database is defined,
+`group`, with just a single function, `get_all_entries`:
 
 ```
 {
