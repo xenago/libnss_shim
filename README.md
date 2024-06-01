@@ -46,7 +46,7 @@ can print to `stdout` in a supported format to be used with NSS.
   as described in `Cargo.toml` prior to running the `debian/postinst` script, but this has not been tested extensively.
 - To request support for a different configuration, please create a GitHub Issue
 
-### Installation steps
+### Install/Upgrade
 
 1. Prepare the commands/software that will be triggered by `libnss_shim` (see the Commands section for details).
 
@@ -61,7 +61,7 @@ can print to `stdout` in a supported format to be used with NSS.
     wget https://github.com/xenago/libnss_shim/releases/download/1.1.0/libnss_shim-1.1.0-1.x86_64.rpm
     ```
 
-3. Install it directly `dpkg` or `rpm`.
+3. Install or upgrade it directly with `dpkg` or `rpm`.
 
    **deb:**
     ```
@@ -69,10 +69,10 @@ can print to `stdout` in a supported format to be used with NSS.
     ```
    **RPM:**
     ```
-    sudo rpm -i ./libnss_shim-1.1.0-1.x86_64.rpm
+    sudo rpm -Uvh ./libnss_shim-1.1.0-1.x86_64.rpm
     ```
 
-4. Configure the shim by importing a custom `config.json`:
+4. Configure the shim by importing a custom `config.json`.
     ```
     sudo cp custom_config.json /etc/libnss_shim/config.json
     ```
@@ -102,17 +102,19 @@ can print to `stdout` in a supported format to be used with NSS.
 
 ## Uninstallation
 
-1. To remove `libnss_shim`, use either `dpkg` or `apt`:
-   ```
-   dpkg -r libnss_shim
-   ```
-   or
-   ```
-   sudo apt remove libnss_shim
-   ```
+1. To remove `libnss_shim`, run the same tool used for installation.
+
+    **deb:**
+    ```
+    dpkg -r libnss_shim
+    ```
+    **RPM:**
+    ```
+    sudo sudo rpm -e libnss_shim
+    ```
 
 2. If removal/deletion is performed, restarting affected applications is required. A system reboot is an effective way
-   to do this:
+   to do this.
    ```
    sudo reboot
    ```
@@ -359,7 +361,9 @@ I generally find it easiest to run `build.sh` inside a temporary container:
 
 3. Run the build script inside a temporary container, setting `LIBNSS_SHIM_VERSION` and the cloned repo path as desired:
 
-       sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build.sh
+       sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim -v /var/run/docker.sock:/var/run/docker.sock --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build.sh
+
+   Note that this requires 
 
 4. The build script will output packages in the following subdirectories of the cloned repo:
 

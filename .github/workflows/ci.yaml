@@ -7,17 +7,14 @@ on:
       - '[0-9].[0-9].[0-9]'
 
 jobs:
-  build_release:
-    name: build and release
-    runs-on: ubuntu-20.04  # Build on Debian-based distro
+  build:
+    name: build
+    runs-on: ubuntu-20.04
     container: quay.io/pypa/manylinux2014_x86_64  # Use a container with glibc 2.17
     steps:
 
-      - name: Show GLIBC  # Confirm glibc version
-        run: ldd --version
-
       - name: Checkout  # Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -33,23 +30,50 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Cargo build  # Release build
+      - name: Cargo build  # Build for release
         run: |
           cargo build --release --verbose
           ls -lah target/release
 
-      - name: Cargo deb  # deb package
+      - name: Cargo deb  # Package deb
         run: |
           cargo install --version 1.44.1 cargo-deb
-          cargo deb --verbose
+          cargo deb --no-build --verbose
           ls -lah target/debian
 
-      - name: Cargo rpm  # RPM package
+      - name: Cargo rpm  # Package RPM
         run: |
           cargo install --version 0.14.0 cargo-generate-rpm
           strip -s target/release/libnss_shim.so
           cargo generate-rpm --payload-compress none
           ls -lah target/generate-rpm
+
+      - uses: uraimo/run-on-arch-action@v2  # Cross-build (arm64/aarch64)
+        name: Cross-build (arm64/aarch64)
+        with:
+          base_image: quay.io/pypa/manylinux2014_aarch64
+          env: |
+            VERSION: ${{github.ref_name}}
+          # Mount the working directory as /libnss_shim in the container, and run commands there
+          dockerRunArgs: |
+            --volume "${PWD}:/libnss_shim"
+            -w "/libnss_shim"
+          # Speeds up builds
+          githubToken: ${{ github.token }}
+          # Prepare cached dependencies
+          setup: |
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            . "$HOME/.cargo/env"
+            cargo install --version 1.44.1 cargo-deb
+            cargo install --version 0.14.0 cargo-generate-rpm
+          run: |
+            . "$HOME/.cargo/env"
+            cargo build --release --verbose
+            ls -lah target/release
+            cargo deb --no-build --verbose
+            ls -lah target/debian
+            cargo generate-rpm --payload-compress none
+            ls -lah target/generate-rpm
 
       - name: Release  # Publish GitHub release
         uses: softprops/action-gh-release@v1
