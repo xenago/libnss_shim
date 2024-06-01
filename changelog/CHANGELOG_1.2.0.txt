@@ -1,0 +1,10 @@
+- Bump `libnss` to `0.8.0` - required code changes
+- Required change: 64-bit integer types to platform-dependent `size` pointer types
+- Remove `lazy_static` dependency
+- Add additional resource, update formatting of `README.md`
+- Bump rust toolchain to `1.78.0`
+- Add ARM compile step to CI
+- Use `uraimo/run-on-arch` action for building
+- Adjust README.md to clarify install/upgrade are the same process
+- Add RPM uninstall notes to README.md
+- Add find-requires script for build (not yet implemented)
