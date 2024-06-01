@@ -40,7 +40,7 @@ can print to `stdout` in a supported format to be used with NSS.
     - Ubuntu 20.04
     - Ubuntu 22.04
     - Ubuntu 24.04
-- Builds for `amd64` architecture
+- Builds for `amd64` and `aarch64` architectures
 - Packaged in `.deb` and `.rpm` formats
 - If available packages do not work on a target platform, `libnss_shim` might be usable if the `assets` are installed
   as described in `Cargo.toml` prior to running the `debian/postinst` script, but this has not been tested extensively.
@@ -52,24 +52,32 @@ can print to `stdout` in a supported format to be used with NSS.
 
 2. Download the latest release produced by GitHub Actions.
 
-   **deb:**
+   **AMD64 deb:**
     ```
-    wget https://github.com/xenago/libnss_shim/releases/download/1.1.0/libnss_shim_1.1.0_amd64.deb
+    curl -sLo libnss_shim.deb https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim_1.2.0_amd64.deb
     ```
-   **RPM:**
+   **AMD64 RPM:**
     ```
-    wget https://github.com/xenago/libnss_shim/releases/download/1.1.0/libnss_shim-1.1.0-1.x86_64.rpm
+    curl -sLo libnss_shim.rpm https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim-1.2.0-1_x86_64.rpm
     ```
+   **Full table:**
+
+   | Architecture | Package | Link                                                                                                                               |
+          |--------------|---------|------------------------------------------------------------------------------------------------------------------------------------|
+   | `amd64`      | `deb`   | [`libnss_shim_1.2.0_amd64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim_1.2.0_amd64.deb)         |
+   | `amd64`      | `RPM`   | [`libnss_shim-1.2.0-1.x86_64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim-1.2.0-1.x86_64.rpm)   |
+   | `aarch64`    | `deb`   | [`libnss_shim_1.2.0_arm64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim_1.2.0_arm64.deb)         |
+   | `aarch64`    | `RPM`   | [`libnss_shim-1.2.0-1.aarch64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim-1.2.0-1.aarch64.rpm) |
 
 3. Install or upgrade it directly with `dpkg` or `rpm`.
 
    **deb:**
     ```
-    sudo dpkg -i libnss_shim_1.1.0_amd64.deb
+    sudo dpkg -i libnss_shim.deb
     ```
    **RPM:**
     ```
-    sudo rpm -Uvh ./libnss_shim-1.1.0-1.x86_64.rpm
+    sudo rpm -Uv ./libnss_shim.rpm
     ```
 
 4. Configure the shim by importing a custom `config.json`.
@@ -80,10 +88,10 @@ can print to `stdout` in a supported format to be used with NSS.
    defined that output nothing (see the Configuration section for details). Updates to the config take effect
    immediately and can be performed at any time after `libnss_shim` has been installed and used, without restarting.
 
-5. By default, `shim` (meaning `libnss_shim`) is defined in `/etc/nsswitch.conf` as the final source for all supported
-   databases. In that file, you can change the access order for each database's sources, remove `shim` from specific
-   locations if not required, etc. Unlike `config.json`, `nsswitch.conf` is read only once per-process, so any software
-   actively using it will need to be started or restarted.
+5. When installed, `libnss_shim` is defined as `shim` in `/etc/nsswitch.conf` as the last source for all supported
+   databases. In that file, the access order for each database's sources can be changed, `shim` can be removed from
+   specific locations if not required, etc. Because `nsswitch.conf` is read only once per-process, any software actively
+   using it will need to be started or restarted when changes are made.
 
    Rebooting the system is often the safest/easiest way to do this:
     ```
@@ -92,25 +100,34 @@ can print to `stdout` in a supported format to be used with NSS.
 
 6. Perform NSS queries to validate the installation, for example using the built-in `getent` tool.
 
-   Some sample commands:
+   Some sample commands to test your implementation:
     ```
     getent group
     getent passwd
     getent shadow
     getent group <groupname>
     ```
+   A very basic test config is available that will respond to `getent group` calls with a fake group (see the demo GIF
+   at the top of this file):
+
+       curl -sLo /etc/libnss_shim/config.json https://raw.githubusercontent.com/xenago/libnss_shim/main/default_config/sample_custom_config.json
+       getent group | tail -1
+
+   If the installation worked, the output should look like:
+
+       testgroup::1008:fake-username,another-user
 
 ## Uninstallation
 
-1. To remove `libnss_shim`, run the same tool used for installation.
+1. To remove `libnss_shim`, run the same package manager used for installation.
 
-    **deb:**
+   **deb:**
     ```
-    dpkg -r libnss_shim
+    sudo dpkg -r libnss_shim
     ```
-    **RPM:**
+   **RPM:**
     ```
-    sudo sudo rpm -e libnss_shim
+    sudo rpm -e libnss_shim
     ```
 
 2. If removal/deletion is performed, restarting affected applications is required. A system reboot is an effective way
@@ -261,7 +278,8 @@ running `program1` with arguments `&&` and `program2`. Although it is not recomm
 remains possible to run a shell directly, e.g. `sh -c 'program1 && program2'`.
 
 Here is the expected JSON format from running each database's supported commands, with types indicated. All numbers are
-expected in base-10 integer form and must fit within the ranges of the indicated numeric  `int` types (`isize` and `usize` are platform-dependent and can be 32 or 64-bits):
+expected in base-10 integer form and must fit within the ranges of the indicated numeric  `int` types (`isize`
+and `usize` are platform-dependent and can be 32 or 64-bits):
 
 - `group`
     - `get_all_entries()`
@@ -283,7 +301,8 @@ expected in base-10 integer form and must fit within the ranges of the indicated
           }
         ```
 
-    - `get_entry_by_gid(uint32 gid)` - Response should be the same format as `get_all_entries()`, but only a single record
+    - `get_entry_by_gid(uint32 gid)` - Response should be the same format as `get_all_entries()`, but only a single
+      record
 
     - `get_entry_by_name(str name)` - Response should be the same format as `get_entry_by_gid(uint32 gid)`
 
@@ -306,7 +325,8 @@ expected in base-10 integer form and must fit within the ranges of the indicated
           }
         ```
 
-    - `get_entry_by_uid(uint32 uid)` - Response should be the same format as `get_all_entries()`, but only a single record
+    - `get_entry_by_uid(uint32 uid)` - Response should be the same format as `get_all_entries()`, but only a single
+      record
 
     - `get_entry_by_name(str name)` - Response should be the same format as `get_entry_by_uid(uint32 uid)`
 
@@ -349,31 +369,40 @@ with `libnss_shim`, using a shell is not recommended as this comes with addition
 
 ## Development
 
-When building locally, using [`act`](https://github.com/nektos/act) can be helpful to run `.github/ci.yaml` directly.
+When building locally, using [`act`](https://github.com/nektos/act) may be helpful to run `.github/ci.yaml` directly.
 Depending on your configuration, some tweaks may be required to enable it to build successfully.
 
-I generally find it easiest to run `build.sh` inside a temporary container:
+I generally find it easiest to run builds inside temporary containers:
 
 1. Ensure `Docker` is installed and available
+
 2. Ensure `libnss_shim` is cloned:
 
        git clone https://github.com/xenago/libnss_shim.git
 
-3. Run the build script inside a temporary container, setting `LIBNSS_SHIM_VERSION` and the cloned repo path as desired:
+3. Run the build script inside the temporary container.
 
-       sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build.sh
+    * Edit the `build/amd64.sh` script, uncommenting out the top sections (those are not needed for CI)
+    * Set `LIBNSS_SHIM_VERSION`
+    * Set `/path/to/cloned/libnss_shim` to its actual location
 
-   Note: [the `manylinux2014` container](https://github.com/pypa/manylinux) is available for various architectures.
+          sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build/amd64.sh
+
+   Note: [the `manylinux2014` container](https://github.com/pypa/manylinux) is available for various architectures. A
+   script has been created for `aarch64`:
+
+          sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_aarch64:latest bash /libnss_shim/build/aarch64.sh
 
 4. The build script will output packages in the following subdirectories of the cloned repo:
 
-   * `target/debian/*.deb` 
-   * `target/generate-rpm/*.rpm`
+    * `target/debian/*.deb`
+    * `target/generate-rpm/*.rpm`
 
 ## Useful resources
 
 - *Building Rust binaries in CI that work with older GLIBC*
-  - Jakub Beránek, AKA Kobzol's [blog](https://kobzol.github.io/rust/ci/2021/05/07/building-rust-binaries-in-ci-that-work-with-older-glibc.html)
+    - Jakub Beránek, AKA
+      Kobzol's [blog](https://kobzol.github.io/rust/ci/2021/05/07/building-rust-binaries-in-ci-that-work-with-older-glibc.html)
 - *NSS Modules Interface*
     - The GNU C [library](https://www.gnu.org/software/libc/manual/html_node/NSS-Modules-Interface.html)
 - *Actions in the NSS configuration*

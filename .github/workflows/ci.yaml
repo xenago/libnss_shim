@@ -22,34 +22,9 @@ jobs:
           export VERSION=${{github.ref_name}}
           sed -i "s/0.0.0/$VERSION/g" Cargo.toml
 
-      #      - name: Install stable toolchain  # Install Rust
-      #        uses: actions-rs/toolchain@v1
-      #        with:
-      #          profile: minimal
-      #          toolchain: stable
-      #          override: true
-      #
-      #      - name: Cargo build  # Build for release
-      #        run: |
-      #          cargo build --release --verbose
-      #          ls -lah target/release
-      #
-      #      - name: Cargo deb  # Package deb
-      #        run: |
-      #          cargo install --version 1.44.1 cargo-deb
-      #          cargo deb --no-build --verbose
-      #          ls -lah target/debian
-      #
-      #      - name: Cargo rpm  # Package RPM
-      #        run: |
-      #          cargo install --version 0.14.0 cargo-generate-rpm
-      #          strip -s target/release/libnss_shim.so
-      #          cargo generate-rpm --payload-compress none
-      #          ls -lah target/generate-rpm
-
       # Build for AMD64
       - uses: uraimo/run-on-arch-action@v2
-        name: x86 Build (x86_64/amd64)
+        name: x86 build (x86_64/amd64)
         with:
           # Use a container with glibc 2.17
           base_image: quay.io/pypa/manylinux2014_x86_64
@@ -61,19 +36,14 @@ jobs:
             -w "/libnss_shim"
           # Speeds up builds, intermediate containers are cached publicly
           githubToken: ${{ github.token }}
-          run: |
+          # Preinstall dependencies to be cached in the container for reuse
+          install: |
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             . "$HOME/.cargo/env"
             cargo install --version 1.44.1 cargo-deb
             cargo install --version 0.14.0 cargo-generate-rpm
-            cargo build --release --verbose
-            ls -lah target/release
-            strip -s target/release/libnss_shim.so
-            ls -lah target/release
-            cargo deb --no-build --verbose
-            ls -lah target/debian
-            cargo generate-rpm --payload-compress none
-            ls -lah target/generate-rpm
+          run: |
+            bash build/amd64.sh
 
       # Build for arm64/aarch64 by emulating in QEMU
       - uses: uraimo/run-on-arch-action@v2
@@ -86,17 +56,13 @@ jobs:
             --volume "${PWD}:/libnss_shim"
             -w "/libnss_shim"
           githubToken: ${{ github.token }}
-          run: |
+          install: |
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             . "$HOME/.cargo/env"
             cargo install --version 1.44.1 cargo-deb
             cargo install --version 0.14.0 cargo-generate-rpm
-            cargo build --release --verbose
-            ls -lah target/release
-            cargo deb --no-build --verbose
-            ls -lah target/debian
-            cargo generate-rpm --payload-compress none
-            ls -lah target/generate-rpm
+          run: |
+            bash build/aarch64.sh
 
       # Publish GitHub release
       - name: Release
