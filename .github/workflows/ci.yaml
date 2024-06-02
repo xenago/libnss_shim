@@ -9,11 +9,11 @@ on:
 jobs:
   build:
     name: build and release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
 
       - name: Checkout  # Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -24,7 +24,7 @@ jobs:
 
       # Build for AMD64
       - uses: uraimo/run-on-arch-action@v2
-        name: x86 build (x86_64/amd64)
+        name: Standard x86 build (x86_64/amd64)
         with:
           # Use a container with glibc 2.17
           base_image: quay.io/pypa/manylinux2014_x86_64
@@ -66,7 +66,7 @@ jobs:
 
       # Publish GitHub release
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         # Presumably redundant due to the `on: push: tags:` filter, but kept for safety
         if: startsWith(github.ref, 'refs/tags/')
         with:
@@ -74,5 +74,7 @@ jobs:
           body_path: ${{github.workspace}}/changelog/CHANGELOG.txt
           fail_on_unmatched_files: true
           files: |
-            target/debian/*.deb
-            target/generate-rpm/*.rpm
+            target/debian/*_amd64.deb
+            target/debian/*_arm64.deb
+            target/generate-rpm/*.x86_64.rpm
+            target/generate-rpm/*.aarch64.rpm

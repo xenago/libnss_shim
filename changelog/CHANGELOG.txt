@@ -1,5 +1,8 @@
 - Bump `cargo-deb` to `2.2.0`
 - Following that upgrade, deb packages will have a `-1` version suffix to match RPM
+- Bump ubuntu build container to `22.04`
+- Bump `actions/checkout` to `v4`
+- Bump `softprops/action-gh-release` to `v2`
 - Single configurable build script with architecture detection
 - Improve install documentation
 - Add package table to README
