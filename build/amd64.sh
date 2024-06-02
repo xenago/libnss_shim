@@ -3,19 +3,20 @@ set -e
 
 cd /libnss_shim
 
-# Uncomment this to set a custom version number:
+# Uncomment this to set a custom version number
+# This is normally done at the start before doing any builds in CI
 #echo "BUILD AMD64: Setting version to $LIBNSS_SHIM_VERSION"
 #sed -i "s/0.0.0/$LIBNSS_SHIM_VERSION/g" Cargo.toml
 
-# Uncomment this to install necessary dependencies:
+# Uncomment this to install necessary dependencies
+# This is normally done in the container build step in CI
 #echo "================"
 #echo "BUILD AMD64: Installing Rust"
 #curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 #. "$HOME/.cargo/env"
-
 #echo "================"
 #echo "BUILD AMD64: Installing cargo dependencies"
-#cargo install --version 1.44.1 cargo-deb
+#cargo install --version 2.2.0 cargo-deb
 #cargo install --version 0.14.0 cargo-generate-rpm
 
 echo "================"

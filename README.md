@@ -8,8 +8,8 @@ with the output of custom commands. Both JSON and the standard colon-separated *
 `libnss_shim` is an adapter to make integration with NSS easier. It is an NSS/nsswitch service that runs commands
 defined per-function in `config.json`. Commands can output responses to queries either in the typical colon-delimited
 Unix format, or in JSON. The output of each command execution is parsed from `stdout` and validated before being passed
-back to NSS (see the Commands section for details). The `group`, `passwd`, and `shadow` NSS databases/services are
-supported (see Configuration section for details)
+back to NSS (see the [Commands section](#commands) for details). The `group`, `passwd`, and `shadow` NSS databases/services are
+supported (see the [Configuration section](#configuration) for details)
 
 ## Demonstration
 
@@ -32,23 +32,24 @@ can print to `stdout` in a supported format to be used with NSS.
 ### Compatibility notes
 
 - Tested on:
-    - CentOS 7
-    - AlmaLinux 8
-    - AlmaLinux 9
-    - Debian 11
-    - Debian 12
-    - Ubuntu 20.04
-    - Ubuntu 22.04
-    - Ubuntu 24.04
+  - CentOS 7
+  - AlmaLinux 8
+  - AlmaLinux 9
+  - Debian 11
+  - Debian 12
+  - Ubuntu 20.04
+  - Ubuntu 22.04
+  - Ubuntu 24.04
 - Builds for `amd64` and `aarch64` architectures
+  - See the [Development section](#development) for more information about building for other architectures
 - Packaged in `.deb` and `.rpm` formats
-- If available packages do not work on a target platform, `libnss_shim` might be usable if the `assets` are installed
-  as described in `Cargo.toml` prior to running the `debian/postinst` script, but this has not been tested extensively.
+  - If those formats are not supported by a target platform, `libnss_shim` might be usable if the `assets` are installed
+    as described in `Cargo.toml` prior to running the `debian/postinst` script, but this has not been tested extensively
 - To request support for a different configuration, please create a GitHub Issue
 
 ### Install/Upgrade
 
-1. Prepare the commands/software that will be triggered by `libnss_shim` (see the Commands section for details).
+1. Prepare the commands/software that will be triggered by `libnss_shim` (see the [Commands section](#commands) for details).
 
 2. Download the latest release produced by GitHub Actions.
 
@@ -85,8 +86,9 @@ can print to `stdout` in a supported format to be used with NSS.
     sudo cp custom_config.json /etc/libnss_shim/config.json
     ```
    Using the preinstalled `config.json`, `libnss_shim` should have no effect, as the default configuration has commands
-   defined that output nothing (see the Configuration section for details). Updates to the config take effect
-   immediately and can be performed at any time after `libnss_shim` has been installed and used, without restarting.
+   defined that output nothing (see the [Configuration section](#configuration) for details). Updates to the config
+   take effect immediately and can be performed at any time after `libnss_shim` has been installed and used, without
+   restarting.
 
 5. When installed, `libnss_shim` is defined as `shim` in `/etc/nsswitch.conf` as the last source for all supported
    databases. In that file, the access order for each database's sources can be changed, `shim` can be removed from
@@ -117,7 +119,7 @@ can print to `stdout` in a supported format to be used with NSS.
 
        testgroup::1008:fake-username,another-user
 
-## Uninstallation
+## Uninstall
 
 1. To remove `libnss_shim`, run the same package manager used for installation.
 
@@ -130,8 +132,8 @@ can print to `stdout` in a supported format to be used with NSS.
     sudo rpm -e libnss_shim
     ```
 
-2. If removal/deletion is performed, restarting affected applications is required. A system reboot is an effective way
-   to do this.
+2. If removed, restarting affected applications is required. A system reboot is an effective way to do this.
+
    ```
    sudo reboot
    ```
@@ -247,13 +249,11 @@ level overrides:
 ## Commands
 
 Commands can have input arguments passed as environment variables or as arguments using the codes defined in the
-Configuration section (such as `<$name>`). To return a response to `libnss_shim`, they can simply print a line
-to `stdout` in the comma-separated *nix format common to `/etc/shadow`, `group`, and `passwd`, or alternatively in JSON
-form as described below. It is important to note that the NSS `compat` options are not supported (e.g. `+@netgroup`).
-Information about the standard Unix [colon-separated form](https://www.debianhelp.co.uk/passwordfile.htm) used
-by `group`, `passwd`, etc. on
-a [variety of *nix systems](https://www.ibm.com/docs/en/aix/7.2?topic=passwords-using-etcpasswd-file) is available
-online.
+[Configuration section](#configuration) (such as `<$name>`). To return a response to `libnss_shim`, they can simply
+print a line to `stdout` in the comma-separated *nix format common to `/etc/shadow`, `group`, and `passwd`, or
+alternatively in JSON form as described below. It is important to note that the NSS `compat` options are not supported
+(e.g. `+@netgroup`). Information about the typical Unix [colon-separated form](https://www.debianhelp.co.uk/passwordfile.htm) used by `group`, `passwd`, etc. on
+a [variety of *nix systems](https://www.ibm.com/docs/en/aix/7.2?topic=passwords-using-etcpasswd-file) is available online.
 
 Although it is best to set all fields explicitly to avoid unexpected issues with default/unset values (nobody wants a
 password to be blank for some reason), only the following fields are required in command output:
@@ -275,8 +275,8 @@ either empty JSON `{}` or nothing at all (other than whitespace/newlines) to `st
 
 Commands and arguments are split according to POSIX shell syntax, but are not run through a shell, so bash-specific
 syntax will not function. For example, a command such as `program1 && program2` will be interpreted as
-running `program1` with arguments `&&` and `program2`. Although it is not recommended (see the Security section), it
-remains possible to run a shell directly, e.g. `sh -c 'program1 && program2'`.
+running `program1` with arguments `&&` and `program2`. Although it is not recommended (see the
+[Security section](#security)), it remains possible to run a shell directly, e.g. `sh -c 'program1 && program2'`.
 
 Here is the expected JSON format from running each database's supported commands, with types indicated. All numbers are
 expected in base-10 integer form and must fit within the ranges of the indicated numeric  `int` types (`isize`
@@ -368,6 +368,8 @@ testing purposes. Environment variables are generally private, whereas commands/
 Commands are not passed through a shell for execution. Although it is possible to run software like `bash`
 with `libnss_shim`, using a shell is not recommended as this comes with additional risks such as command injection.
 
+Please report problems by creating GitHub Issues or [private advisories](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability).
+
 ## Development
 
 When building locally, using [`act`](https://github.com/nektos/act) may be helpful to run `.github/ci.yaml` directly.
@@ -375,24 +377,24 @@ Depending on your configuration, some tweaks may be required to enable it to bui
 
 I generally find it easiest to run builds inside temporary containers:
 
-1. Ensure `Docker` is installed and available
+1. Ensure Docker is installed and the `docker` command is available to the running user.
 
-2. Ensure `libnss_shim` is cloned:
+2. Ensure the `libnss_shim` repository has been cloned:
 
        git clone https://github.com/xenago/libnss_shim.git
 
-3. Run the build script inside the temporary container.
+3. Run the build script inside a temporary container:
 
     * Edit the `build/amd64.sh` script, uncommenting out the top sections (those are not needed for CI)
     * Set `LIBNSS_SHIM_VERSION`
     * Set `/path/to/cloned/libnss_shim` to its actual location
 
-          sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build/amd64.sh
+          docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build/amd64.sh
 
    Note: [the `manylinux2014` container](https://github.com/pypa/manylinux) is available for various architectures. A
-   script has been created for `aarch64`:
+   `libnss_shim` build script has been created for `aarch64`:
 
-          sudo docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_aarch64:latest bash /libnss_shim/build/aarch64.sh
+          docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_aarch64:latest bash /libnss_shim/build/aarch64.sh
 
 4. The build script will output packages in the following subdirectories of the cloned repo:
 
@@ -401,28 +403,35 @@ I generally find it easiest to run builds inside temporary containers:
 
 ## Useful resources
 
+- *Python wheels that work on any linux (almost)*
+  - Multi-arch linux containers with wide compatibility for build needs
+  - The `manylinux` project [repository](https://github.com/pypa/manylinux)
+- *Run-On-Arch GitHub Action*
+  - Run containers on various CPU architectures with QEMU
+  - The `run-on-arch-action` [repository](https://github.com/uraimo/run-on-arch-action)
+- *Rust bindings for creating libnss modules*
+  - The `libnss` [crate](https://crates.io/crates/libnss)
+- *Debian packages from Cargo projects*
+  - The `cargo-deb` [crate](https://crates.io/crates/cargo-deb)
+- *Generate a binary RPM package (.rpm) from Cargo projects*
+  - The `cargo-generate-rpm` [crate](https://crates.io/crates/cargo-generate-rpm)
 - *Building Rust binaries in CI that work with older GLIBC*
-    - Jakub Beránek, AKA
-      Kobzol's [blog](https://kobzol.github.io/rust/ci/2021/05/07/building-rust-binaries-in-ci-that-work-with-older-glibc.html)
+    - Jakub Beránek, AKA Kobzol's [blog](https://kobzol.github.io/rust/ci/2021/05/07/building-rust-binaries-in-ci-that-work-with-older-glibc.html)
 - *NSS Modules Interface*
     - The GNU C [library](https://www.gnu.org/software/libc/manual/html_node/NSS-Modules-Interface.html)
 - *Actions in the NSS configuration*
     - The GNU C [library](https://www.gnu.org/software/libc/manual/html_node/Actions-in-the-NSS-configuration.html)
-- *Rust bindings for creating libnss modules*
-    - The `libnss` [crate](https://crates.io/crates/libnss)
-- *Debian packages from Cargo projects*
-    - The `cargo-deb` [crate](https://crates.io/crates/cargo-deb)
-- *Generate a binary RPM package (.rpm) from Cargo projects*
-    - The `cargo-generate-rpm` [crate](https://crates.io/crates/cargo-generate-rpm)
+- *Testing NSS modules in glibc*
+  - Geoffrey Thomas's [blog](https://ldpreload.com/blog/testing-glibc-nsswitch)
+- *NSS - Debathena*
+  - A useful description of NSS and how it fits into the Debathena architecture
+  - MIT Debathena [wiki](https://debathena.mit.edu/trac/wiki/NSS)
+- *Debathena hacks*
+  - Links to more NSS-related code for the Debathena project
+  - MIT Debathena [website](https://debathena.mit.edu/hacks)
+- Debathena NSS module source example
+  - MIT Debathena [repository](https://debathena.mit.edu/packages/debathena/libnss-afspag/libnss-afspag-1.0/)
 - Example of a `libnss` plugin produced with Rust and packaged as `.deb`
     - The `nss-wiregarden` [crate](https://crates.io/crates/libnss-wiregarden)
 - Example of parsing `passwd` and `group` formats with Rust
     - The `parsswd` [crate](https://crates.io/crates/parsswd)
-- *Testing NSS modules in glibc*
-    - Geoffrey Thomas's [blog](https://ldpreload.com/blog/testing-glibc-nsswitch)
-- *NSS - Debathena* (useful description of NSS and how it fits into their architecture)
-    - MIT Debathena [wiki](https://debathena.mit.edu/trac/wiki/NSS)
-- *Debathena hacks* (links to more NSS-related code for their project)
-    - MIT Debathena [website](https://debathena.mit.edu/hacks)
-- Debathena NSS module source example
-    - MIT Debathena [repository](https://debathena.mit.edu/packages/debathena/libnss-afspag/libnss-afspag-1.0/)

@@ -59,7 +59,7 @@ jobs:
           install: |
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             . "$HOME/.cargo/env"
-            cargo install --version 1.44.1 cargo-deb
+            cargo install --version 2.2.0 cargo-deb
             cargo install --version 0.14.0 cargo-generate-rpm
           run: |
             bash build/aarch64.sh
