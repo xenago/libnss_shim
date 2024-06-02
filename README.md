@@ -375,7 +375,7 @@ Please report problems by creating GitHub Issues or [private advisories](https:/
 When building locally, using [`act`](https://github.com/nektos/act) may be helpful to run `.github/ci.yaml` directly.
 Depending on your configuration, some tweaks may be required to enable it to build successfully.
 
-I generally find it easiest to run builds inside temporary containers:
+It is fairly simple to run builds inside temporary containers:
 
 1. Ensure Docker is installed and the `docker` command is available to the running user.
 
@@ -383,18 +383,14 @@ I generally find it easiest to run builds inside temporary containers:
 
        git clone https://github.com/xenago/libnss_shim.git
 
-3. Run the build script inside a temporary container:
+3. Run the build script inside a temporary container using this `docker run` command:
 
-    * Edit the `build/amd64.sh` script, uncommenting out the top sections (those are not needed for CI)
-    * Set `LIBNSS_SHIM_VERSION`
-    * Set `/path/to/cloned/libnss_shim` to its actual location
+    * Edit `--version=0.0.0` if a specific version number is desired
+    * Replace `/path/to/cloned/libnss_shim` with the actual location of the cloned repository
 
-          docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash /libnss_shim/build/amd64.sh
+          docker run -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash -c 'cd /libnss_shim && bash build.sh --version_number=0.0.0'
 
-   Note: [the `manylinux2014` container](https://github.com/pypa/manylinux) is available for various architectures. A
-   `libnss_shim` build script has been created for `aarch64`:
-
-          docker run -e "LIBNSS_SHIM_VERSION=0.0.0" -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_aarch64:latest bash /libnss_shim/build/aarch64.sh
+   Note: [the `manylinux2014` container](https://github.com/pypa/manylinux) is available for various architectures.
 
 4. The build script will output packages in the following subdirectories of the cloned repo:
 

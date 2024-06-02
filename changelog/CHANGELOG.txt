@@ -1,6 +1,6 @@
 - Bump `cargo-deb` to `2.2.0`
 - Following that upgrade, deb packages will have a `-1` version suffix to match RPM
-- Use dedicated build scripts per-arch
+- Single configurable build script with architecture detection
 - Improve install documentation
 - Add package table to README
 - Document install test command from GIF in README

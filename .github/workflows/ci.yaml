@@ -43,7 +43,7 @@ jobs:
             cargo install --version 1.44.1 cargo-deb
             cargo install --version 0.14.0 cargo-generate-rpm
           run: |
-            bash build/amd64.sh
+            bash build.sh --install_rust=false --install_cargo_deps=false
 
       # Build for arm64/aarch64 by emulating in QEMU
       - uses: uraimo/run-on-arch-action@v2
@@ -62,7 +62,7 @@ jobs:
             cargo install --version 2.2.0 cargo-deb
             cargo install --version 0.14.0 cargo-generate-rpm
           run: |
-            bash build/aarch64.sh
+            bash build.sh --install_rust=false --install_cargo_deps=false
 
       # Publish GitHub release
       - name: Release
