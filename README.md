@@ -1,15 +1,15 @@
 # libnss_shim
 
-Respond to [Name Service Switch](https://www.gnu.org/software/libc/manual/html_node/Name-Service-Switch.html) lookups
-with the output of custom commands. Both JSON and the standard colon-separated *nix format are supported.
+Respond to [Name Service Switch](https://www.gnu.org/software/libc/manual/html_node/Name-Service-Switch.html) lookups with the output of custom commands. Both JSON and the typical
+colon-separated *nix format are supported.
 
 ## Overview
 
 `libnss_shim` is an adapter to make integration with NSS easier. It is an NSS/nsswitch service that runs commands
-defined per-function in `config.json`. Commands can output responses to queries either in the typical colon-delimited
-Unix format, or in JSON. The output of each command execution is parsed from `stdout` and validated before being passed
-back to NSS (see the [Commands section](#commands) for details). The `group`, `passwd`, and `shadow` NSS databases/services are
-supported (see the [Configuration section](#configuration) for details)
+defined per-function in `config.json`. Commands can output responses to queries either in the colon-delimited Unix
+format, or in JSON. The output of each command execution is parsed from `stdout` and validated before being passed back
+to NSS (see the [Commands section](#commands)). The `group`, `passwd`, and `shadow` NSS databases/services are supported
+(see the [Configuration section](#configuration))
 
 ## Demonstration
 
@@ -17,31 +17,30 @@ supported (see the [Configuration section](#configuration) for details)
 
 ## Background
 
-Custom [PAM](https://www.man7.org/linux/man-pages/man8/pam.8.html) modules alone are not enough to create a custom Linux
-authentication process - integration with NSS is also required to inject custom user data to `group`/`passwd`/`shadow`
-lookups earlier in the login flow.
+Custom [PAM](https://www.man7.org/linux/man-pages/man8/pam.8.html) modules alone are not enough to create a custom Linux authentication process - integration with NSS is
+also required to inject custom user data to `group`/`passwd`/`shadow` lookups earlier in the login flow.
 
 In other words: NSS determines if an account exists, and PAM determines how an account can be accessed.
 
-A good example of this is [SSSD](https://sssd.io), which leverages both NSS and PAM to enable seamless LDAP
-authentication. Integrating directly with NSS can be difficult, so `libnss_shim` was created to allow any command that
-can print to `stdout` in a supported format to be used with NSS.
+For example, [SSSD](https://sssd.io) leverages both NSS and PAM to enable seamless LDAP authentication. Integrating directly with
+NSS can be difficult, so `libnss_shim` was created to allow any command that can print to `stdout` in a supported format
+to be used with NSS.
 
 ## Installation
 
 ### Compatibility notes
 
 - Tested on:
-  - CentOS 7
-  - AlmaLinux 8
-  - AlmaLinux 9
   - Debian 11
   - Debian 12
   - Ubuntu 20.04
   - Ubuntu 22.04
   - Ubuntu 24.04
+  - CentOS 7
+  - AlmaLinux 8
+  - AlmaLinux 9
 - Builds for `amd64` and `aarch64` architectures
-  - See the [Development section](#development) for more information about building for other architectures
+  - See the [Development section](#development) for information about building for other architectures
 - Packaged in `.deb` and `.rpm` formats
   - If those formats are not supported by a target platform, `libnss_shim` might be usable if the `assets` are installed
     as described in `Cargo.toml` prior to running the `debian/postinst` script, but this has not been tested extensively
@@ -49,7 +48,7 @@ can print to `stdout` in a supported format to be used with NSS.
 
 ### Install/Upgrade
 
-1. Prepare the commands/software that will be triggered by `libnss_shim` (see the [Commands section](#commands) for details).
+1. Prepare the commands/software that will be triggered by `libnss_shim` (see the [Commands section](#commands)).
 
 2. Download the latest release produced by GitHub Actions.
 
@@ -252,8 +251,8 @@ Commands can have input arguments passed as environment variables or as argument
 [Configuration section](#configuration) (such as `<$name>`). To return a response to `libnss_shim`, they can simply
 print a line to `stdout` in the comma-separated *nix format common to `/etc/shadow`, `group`, and `passwd`, or
 alternatively in JSON form as described below. It is important to note that the NSS `compat` options are not supported
-(e.g. `+@netgroup`). Information about the typical Unix [colon-separated form](https://www.debianhelp.co.uk/passwordfile.htm) used by `group`, `passwd`, etc. on
-a [variety of *nix systems](https://www.ibm.com/docs/en/aix/7.2?topic=passwords-using-etcpasswd-file) is available online.
+(e.g. `+@netgroup`). Information about the [colon-separated format](https://www.debianhelp.co.uk/passwordfile.htm) used for `group`, `passwd`, etc. on a
+[variety of *nix systems](https://www.ibm.com/docs/en/aix/7.2?topic=passwords-using-etcpasswd-file) is available online.
 
 Although it is best to set all fields explicitly to avoid unexpected issues with default/unset values (nobody wants a
 password to be blank for some reason), only the following fields are required in command output:
@@ -354,7 +353,7 @@ and `usize` are platform-dependent and can be 32 or 64-bits):
 
     - `get_entry_by_name(str name)` - Response should be the same format as `get_all_entries()`, but only a single
       record.
-    - *Note*: The final field, `reserved`, is seemingly unused in practice and is typically omitted
+    - *Note*: The final field, `reserved`, is seemingly unused in practice and is typically omitted.
 
 ## Security
 
@@ -385,8 +384,8 @@ It is fairly simple to run builds inside temporary containers:
 
 3. Run the build script inside a temporary container using this `docker run` command:
 
-    * Edit `--version=0.0.0` if a specific version number is desired
-    * Replace `/path/to/cloned/libnss_shim` with the actual location of the cloned repository
+    * Edit `--version=0.0.0` if a specific version number is desired.
+    * Replace `/path/to/cloned/libnss_shim` with the actual location of the cloned repository.
 
           docker run -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash -c 'cd /libnss_shim && bash build.sh --version_number=0.0.0'
 
