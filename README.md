@@ -81,15 +81,17 @@ to be used with NSS.
     ```
 
 4. Configure the shim by importing a custom `config.json`.
+
+   e.g.
     ```
     sudo cp custom_config.json /etc/libnss_shim/config.json
     ```
-   Using the preinstalled `config.json`, `libnss_shim` should have no effect, as the default configuration has commands
+   Using the default `config.json`, `libnss_shim` should have no effect, as the default configuration has commands
    defined that output nothing (see the [Configuration section](#configuration) for details). Updates to the config
    take effect immediately and can be performed at any time after `libnss_shim` has been installed and used, without
    restarting.
 
-5. When installed, `libnss_shim` is defined as `shim` in `/etc/nsswitch.conf` as the last source for all supported
+5. When installed, `libnss_shim` is mapped as `shim` in `/etc/nsswitch.conf` as the last source for all supported
    databases. In that file, the access order for each database's sources can be changed, `shim` can be removed from
    specific locations if not required, etc. Because `nsswitch.conf` is read only once per-process, any software actively
    using it will need to be started or restarted when changes are made.
@@ -352,8 +354,8 @@ and `usize` are platform-dependent and can be 32 or 64-bits):
         ```
 
     - `get_entry_by_name(str name)` - Response should be the same format as `get_all_entries()`, but only a single
-      record.
-    - *Note*: The final field, `reserved`, is seemingly unused in practice and is typically omitted.
+      record
+    - *Note*: The final field, `reserved`, is seemingly unused in practice and is typically omitted
 
 ## Security
 
@@ -376,20 +378,21 @@ Depending on your configuration, some tweaks may be required to enable it to bui
 
 It is fairly simple to run builds inside temporary containers:
 
-1. Ensure Docker is installed and the `docker` command is available to the running user.
+1. Ensure Docker is installed and the `docker` command is available to the running user
 
 2. Ensure the `libnss_shim` repository has been cloned:
 
        git clone https://github.com/xenago/libnss_shim.git
 
-3. Run the build script inside a temporary container using this `docker run` command:
+3. Run the build script inside a temporary container using the `docker run` command below
 
-    * Edit `--version=0.0.0` if a specific version number is desired.
-    * Replace `/path/to/cloned/libnss_shim` with the actual location of the cloned repository.
+    * Edit `--version=0.0.0` if a specific version number is desired
+    * Replace `/path/to/cloned/libnss_shim` with the actual location of the cloned repository
 
           docker run -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash -c 'cd /libnss_shim && bash build.sh --version_number=0.0.0'
 
-   Note: [the `manylinux2014` container](https://github.com/pypa/manylinux) is available for various architectures.
+   Note: it may be possible to build `libnss_shim` for additional architectures and operating systems by using different
+   [`manylinux`](https://github.com/pypa/manylinux) versions or other containers
 
 4. The build script will output packages in the following subdirectories of the cloned repo:
 
