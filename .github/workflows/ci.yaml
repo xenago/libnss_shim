@@ -12,12 +12,14 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
 
-      - name: Checkout  # Clone repository
+      # Clone repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set version  # Overwrite the placeholder version number in Cargo.toml with the commit tag
+      # Overwrite the placeholder version number in Cargo.toml with the commit tag
+      - name: Set version
         run: |
           export VERSION=${{github.ref_name}}
           sed -i "s/0.0.0/$VERSION/g" Cargo.toml
@@ -28,8 +30,6 @@ jobs:
         with:
           # Use a container with glibc 2.17
           base_image: quay.io/pypa/manylinux2014_x86_64
-          env: |
-            VERSION: ${{github.ref_name}}
           # Mount the working directory as /libnss_shim in the container, and run commands there
           dockerRunArgs: |
             --volume "${PWD}:/libnss_shim"
@@ -50,8 +50,6 @@ jobs:
         name: QEMU ARM build (arm64/aarch64)
         with:
           base_image: quay.io/pypa/manylinux2014_aarch64
-          env: |
-            VERSION: ${{github.ref_name}}
           dockerRunArgs: |
             --volume "${PWD}:/libnss_shim"
             -w "/libnss_shim"
