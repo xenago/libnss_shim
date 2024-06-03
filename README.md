@@ -373,10 +373,7 @@ Please report problems by creating GitHub Issues or [private advisories](https:/
 
 ## Development
 
-When building locally, using [`act`](https://github.com/nektos/act) may be helpful to run `.github/ci.yaml` directly.
-Depending on your configuration, some tweaks may be required to enable it to build successfully.
-
-It is fairly simple to run builds inside temporary containers:
+Builds can be run inside temporary containers:
 
 1. Ensure Docker is installed and the `docker` command is available to the running user
 
@@ -384,20 +381,24 @@ It is fairly simple to run builds inside temporary containers:
 
        git clone https://github.com/xenago/libnss_shim.git
 
-3. Run the build script inside a temporary container using the `docker run` command below
+3. Run the build script inside a container using the `docker run` command
 
-    * Edit `--version=0.0.0` if a specific version number is desired
     * Replace `/path/to/cloned/libnss_shim` with the actual location of the cloned repository
+    * Edit `--version_number=0.0.0` if a specific version number is desired (SemVer format) 
 
           docker run -v /path/to/cloned/libnss_shim:/libnss_shim --rm -it quay.io/pypa/manylinux2014_x86_64:latest bash -c 'cd /libnss_shim && bash build.sh --version_number=0.0.0'
 
    Note: it may be possible to build `libnss_shim` for additional architectures and operating systems by using different
-   [`manylinux`](https://github.com/pypa/manylinux) versions or other containers
+   [`manylinux`](https://github.com/pypa/manylinux) versions or other containers in combination with QEMU.
+   [`cross`](https://github.com/cross-rs/cross) might also help in this regard.
 
 4. The build script will output packages in the following subdirectories of the cloned repo:
 
     * `target/debian/*.deb`
     * `target/generate-rpm/*.rpm`
+
+[`act`](https://github.com/nektos/act) may enable `.github/ci.yaml` to be run locally, but this has not been tested
+extensively.
 
 ## Useful resources
 

@@ -60,7 +60,7 @@ echo "================"
 if [[ $version_number != "0.0.0" ]]
   then
     echo "BUILD ${architecture}: Setting version to ${version_number}"
-    sed -i "s/0.0.0/${version_number}/g" Cargo.toml
+    sed -i "0,/^version /s/=.*$/= \"${version_number}\"/" Cargo.toml
     echo "================"
 fi
 if $install_rust

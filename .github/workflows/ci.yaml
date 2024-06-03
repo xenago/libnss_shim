@@ -21,8 +21,7 @@ jobs:
       # Overwrite the placeholder version number in Cargo.toml with the commit tag
       - name: Set version
         run: |
-          export VERSION=${{github.ref_name}}
-          sed -i "s/0.0.0/$VERSION/g" Cargo.toml
+          sed -i "0,/^version /s/=.*$/= \"${{github.ref_name}}\"/" Cargo.toml
 
       # Build for AMD64
       - uses: uraimo/run-on-arch-action@v2
