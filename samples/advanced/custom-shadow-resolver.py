@@ -3,7 +3,6 @@ import sys
 
 fn = sys.argv[1]
 
-
 # Each test user's password is the same as its username
 entries = {
     "test-shim-user-1": "test-shim-user-1:$y$j9T$mpqMRQPh51zsMQlg6Koa5/$iYcT2urasxmk99rWCuahIEcNEQDGZcVN0876t80XUm2:19879:0:99999:7:::",

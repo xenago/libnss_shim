@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     name: build and release
+    # https://github.com/actions/runner-images
     runs-on: ubuntu-24.04
 
     # Required for attestation
@@ -21,6 +22,7 @@ jobs:
 
       # Clone repository
       - name: Checkout
+        # https://github.com/actions/checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -31,8 +33,9 @@ jobs:
           sed -i "0,/^version /s/=.*$/= \"${GITHUB_REF_NAME}\"/" Cargo.toml
 
       # Build for AMD64
-      - uses: uraimo/run-on-arch-action@v2
-        name: Standard x86 build (x86_64/amd64)
+      - name: Standard x86 build (x86_64/amd64)
+        # https://github.com/uraimo/run-on-arch-action
+        uses: uraimo/run-on-arch-action@v2
         with:
           # Use a container with glibc 2.17
           base_image: quay.io/pypa/manylinux2014_x86_64
@@ -51,10 +54,11 @@ jobs:
           run: |
             bash build.sh --install_rust=false --install_cargo_deps=false
 
-      # Build for arm64/aarch64 by emulating in QEMU
       - uses: uraimo/run-on-arch-action@v2
+        # Build for arm64/aarch64 by emulating in QEMU
         name: QEMU ARM build (arm64/aarch64)
         with:
+          # https://github.com/pypa/manylinux
           base_image: quay.io/pypa/manylinux2014_aarch64
           dockerRunArgs: |
             --volume "${PWD}:/libnss_shim"
@@ -69,8 +73,8 @@ jobs:
             bash build.sh --install_rust=false --install_cargo_deps=false
 
       # Generate artifact attestations to establish provenance for builds
-      # https://docs.github.com/en/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds
       - name: Generate binary attestation
+        # https://docs.github.com/en/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds
         uses: actions/attest-build-provenance@v1
         with:
           subject-path: |
@@ -79,14 +83,14 @@ jobs:
             target/generate-rpm/*.x86_64.rpm
             target/generate-rpm/*.aarch64.rpm
 
-      # https://github.com/marketplace/actions/anchore-sbom-action
       - name: Generate SBOM
+        # https://github.com/marketplace/actions/anchore-sbom-action
         uses: anchore/sbom-action@v0
         with:
           artifact-name: sbom.spdx.json
 
-      # https://github.com/actions/attest-sbom
       - name: Generate SBOM attestation for deb packages
+        # https://github.com/actions/attest-sbom
         uses: actions/attest-sbom@v1
         with:
           subject-path: 'target/debian/*.deb'
@@ -100,6 +104,7 @@ jobs:
 
       # Publish GitHub release
       - name: Release
+        # https://github.com/softprops/action-gh-release
         uses: softprops/action-gh-release@v2
         # Presumably redundant due to the `on: push: tags:` filter, but kept for safety
         if: startsWith(github.ref, 'refs/tags/')

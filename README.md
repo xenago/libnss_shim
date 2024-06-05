@@ -377,7 +377,7 @@ However, as the `shadow` database is generally only accessed via `su`/`setuid` e
 queries can be left as `640`:
 
     sudo chown root:root /path/to/custom/shadow-script.py
-    sudo chmod 640 /path/to/custom/group-script.py
+    sudo chmod 640 /path/to/custom/shadow-script.py
 
 It is recommended to pass data (like `<$name>`) using environment variables rather than arguments, except for
 testing purposes. Environment variables are generally private, whereas commands/launch args are not.
@@ -417,9 +417,6 @@ Builds can be run inside temporary containers:
 
     * `target/debian/*.deb`
     * `target/generate-rpm/*.rpm`
-
-[`act`](https://github.com/nektos/act) may enable `.github/ci.yaml` to be run locally, but this has not been tested
-extensively.
 
 ## Useful resources
 
