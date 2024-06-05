@@ -64,7 +64,7 @@ to be used with NSS.
 
    | Architecture | Package | Link                                                                                                                               |
    |--------------|---------|------------------------------------------------------------------------------------------------------------------------------------|
-   | `amd64`      | `deb`   | [`libnss_shim_1.2.1-1_amd64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-_amd64.deb)      |
+   | `amd64`      | `deb`   | [`libnss_shim_1.2.1-1_amd64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-1_amd64.deb)      |
    | `amd64`      | `RPM`   | [`libnss_shim-1.2.1-1.x86_64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.x86_64.rpm)   |
    | `aarch64`    | `deb`   | [`libnss_shim_1.2.1-1_arm64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-1_arm64.deb)     |
    | `aarch64`    | `RPM`   | [`libnss_shim-1.2.1-1.aarch64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.aarch64.rpm) |
