@@ -1,8 +1,9 @@
 - Adjust default permission of `config.json` to 644
 - Add note to README about script permissions for users (`group`/`passwd` OK public, `shadow` best private)
+- Add advanced example with scripts for each function and a Dockerfile
 - Migrate to a single configurable build script with CPU architecture detection
+- From this release onwards, deb packages will have a `-1` version suffix to match RPM
 - Bump `cargo-deb` to `2.2.0`
-- Following that upgrade, deb packages will have a `-1` version suffix to match RPM
 - Bump ubuntu build container to `24.04`
 - Bump `actions/checkout` to `v4`
 - Bump `softprops/action-gh-release` to `v2`
@@ -11,4 +12,4 @@
 - Document install test command from GIF in README
 - Link sections in README.md
 - Add reporting info to README.md
-- Reformat resources, add additional resources
+- Reformat resources, add additional linked resources
