@@ -52,6 +52,7 @@ jobs:
             cargo install --version 2.2.0 cargo-deb
             cargo install --version 0.14.0 cargo-generate-rpm
           run: |
+            . "$HOME/.cargo/env"
             bash build.sh --install_rust=false --install_cargo_deps=false
 
       - uses: uraimo/run-on-arch-action@v2
@@ -70,6 +71,7 @@ jobs:
             cargo install --version 2.2.0 cargo-deb
             cargo install --version 0.14.0 cargo-generate-rpm
           run: |
+            . "$HOME/.cargo/env"
             bash build.sh --install_rust=false --install_cargo_deps=false
 
       # Generate artifact attestations to establish provenance for builds
