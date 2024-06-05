@@ -53,13 +53,13 @@ to be used with NSS.
 2. Download the latest release produced by GitHub Actions.
 
    **AMD64 deb:**
-    ```
-    curl -sLo libnss_shim.deb https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-1_amd64.deb
-    ```
+
+       curl -sLo libnss_shim.deb https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-1_amd64.deb
+
    **AMD64 RPM:**
-    ```
-    curl -sLo libnss_shim.rpm https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.x86_64.rpm
-    ```
+
+       curl -sLo libnss_shim.rpm https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.x86_64.rpm
+
    **Full table:**
 
    | Architecture | Package | Link                                                                                                                               |
@@ -68,6 +68,15 @@ to be used with NSS.
    | `amd64`      | `RPM`   | [`libnss_shim-1.2.1-1.x86_64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.x86_64.rpm)   |
    | `aarch64`    | `deb`   | [`libnss_shim_1.2.1-1_arm64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-1_arm64.deb)     |
    | `aarch64`    | `RPM`   | [`libnss_shim-1.2.1-1.aarch64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.aarch64.rpm) |
+
+   It is also possible to get the latest release URLs using the public GitHub API:
+
+       curl -s https://api.github.com/repos/xenago/libnss_shim/releases/latest | grep "browser_download_url.*.$" | cut -d : -f 2,3 | tr -d \" | tr -d " "
+
+   By filtering those results further and adding a final `curl` download, the latest version of a specific package can
+   be acquired in one line. For instance, this command will download the latest 64-bit x86 `deb` installer:
+
+       curl -s https://api.github.com/repos/xenago/libnss_shim/releases/latest | grep "browser_download_url.*.$" | cut -d : -f 2,3 | tr -d \" | tr -d " " | grep amd64.deb | xargs -n 1 curl -sLO
 
 3. Install or upgrade it directly with `dpkg` or `rpm`.
 
