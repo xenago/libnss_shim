@@ -30,7 +30,7 @@ jobs:
       # Overwrite the placeholder version number in Cargo.toml with the commit tag
       - name: Set version
         run: |
-          sed -i "0,/^version /s/=.*$/= \"${GITHUB_REF_NAME}\"/" Cargo.toml
+          sed -i "/^version /s/=.*$/= \"${GITHUB_REF_NAME}\"/" Cargo.toml
 
       # Build for AMD64
       - name: Standard x86 build (x86_64/amd64)
