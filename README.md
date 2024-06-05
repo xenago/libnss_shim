@@ -363,14 +363,21 @@ and `usize` are platform-dependent and can be 32 or 64-bits):
 
 This NSS plugin runs commands defined in the file `/etc/libnss_shim/config.json`, which is only writable by the `root` 
 user by default. Ensure that this file, the commands defined inside it, and any other related resources remain read-only
-to other users, or the system may be vulnerable to privilege escalation attacks.
+to other users, or the system may be vulnerable to privilege escalation attacks. Do not store secrets in `config.json`
+or any other file which can be read by non-`root` users.
 
 To enable non-root users to access resources defined by `libnss_shim`, they must be able to access the commands defined
-in `config.json`. For example, if a file `script.py` is being used, it will need to be readable (along with the Python 
-interpreter used to run it):
+in `config.json`. For example, if a file `group-script.py` is being used to resolve `group` queries, it will need to be
+readable (along with the Python interpreter used to run it):
 
-    sudo chown root:root /path/to/custom/script.py
-    sudo chmod 644 /path/to/custom/script.py
+    sudo chown root:root /path/to/custom/group-script.py
+    sudo chmod 644 /path/to/custom/group-script.py
+
+However, as the `shadow` database is generally only accessed via `su`/`setuid` etc., programs used to resolve `shadow`
+queries can be left as `640`:
+
+    sudo chown root:root /path/to/custom/shadow-script.py
+    sudo chmod 640 /path/to/custom/group-script.py
 
 It is recommended to pass data (like `<$name>`) using environment variables rather than arguments, except for
 testing purposes. Environment variables are generally private, whereas commands/launch args are not.
