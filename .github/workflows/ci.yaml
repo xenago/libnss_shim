@@ -89,6 +89,7 @@ jobs:
         # https://github.com/marketplace/actions/anchore-sbom-action
         uses: anchore/sbom-action@v0
         with:
+          output-file: '${{ github.workspace }}/sbom.spdx.json'
           artifact-name: sbom.spdx.json
 
       - name: Generate SBOM attestation for deb packages
