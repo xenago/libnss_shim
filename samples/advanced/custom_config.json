@@ -1,0 +1,56 @@
+{
+  "databases": {
+    "group": {
+      "functions": {
+        "get_all_entries": {
+          "command": "python3 /etc/libnss_shim/resolver.py --group --all"
+        },
+        "get_entry_by_gid": {
+          "command": "python3 /etc/libnss_shim/resolver.py --group --id",
+          "env": {
+            "LIBNSS_SHIM_GROUP_ID": "<$gid>"
+          }
+        },
+        "get_entry_by_name": {
+          "command": "python3 /etc/libnss_shim/resolver.py --group --name",
+          "env": {
+            "LIBNSS_SHIM_GROUP_NAME": "<$name>"
+          }
+        }
+      }
+    },
+    "passwd": {
+      "functions": {
+        "get_all_entries": {
+          "command": "python3 /etc/libnss_shim/resolver.py --passwd --all"
+        },
+        "get_entry_by_uid": {
+          "command": "python3 /etc/libnss_shim/resolver.py --passwd --id",
+          "env": {
+            "LIBNSS_SHIM_PASSWD_ID": "<$uid>"
+          }
+        },
+        "get_entry_by_name": {
+          "command": "python3 /etc/libnss_shim/resolver.py --passwd --name",
+          "env": {
+            "LIBNSS_SHIM_PASSWD_NAME": "<$name>"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "functions": {
+        "get_all_entries": {
+          "command": "python3 /etc/libnss_shim/resolver.py --shadow --all"
+        },
+        "get_entry_by_name": {
+          "command": "python3 /etc/libnss_shim/resolver.py --shadow --name",
+          "env": {
+            "LIBNSS_SHIM_SHADOW_NAME": "<$name>"
+          }
+        }
+      }
+    }
+  },
+  "debug" : false
+}

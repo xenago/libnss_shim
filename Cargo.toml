@@ -33,7 +33,7 @@ priority = "optional"
 extended-description = "A plugin for the Name Service Switch (NSS) framework that parses the output of commands to resolve queries."
 assets = [
     ["target/release/libnss_shim.so", "lib/libnss_shim.so.2", "644"],
-    ["default_config/config.json", "etc/libnss_shim/config.json", "640"],
+    ["default_config/config.json", "etc/libnss_shim/config.json", "644"],
     ["README.md", "usr/share/doc/libnss_shim/README", "644"],
 ]
 conf-files = ["etc/libnss_shim/config.json"]
@@ -43,7 +43,7 @@ maintainer-scripts = "debian"
 summary = "A plugin for the Name Service Switch (NSS) framework that parses the output of commands to resolve queries."
 assets = [
     { source = "target/release/libnss_shim.so", dest = "/lib64/libnss_shim.so.2", mode = "644", config = false, doc = false, user = "root", group = "root" },
-    { source = "default_config/config.json", dest = "/etc/libnss_shim/config.json", mode = "640", config = true, doc = false, user = "root", group = "root" },
+    { source = "default_config/config.json", dest = "/etc/libnss_shim/config.json", mode = "644", config = true, doc = false, user = "root", group = "root" },
     { source = "README.md", dest = "/usr/share/doc/libnss_shim/README", mode = "644", config = false, doc = true, user = "root", group = "root" },
 ]
 post_install_script = "debian/postinst"

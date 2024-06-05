@@ -103,22 +103,24 @@ to be used with NSS.
 
 6. Perform NSS queries to validate the installation, for example using the built-in `getent` tool.
 
-   Some sample commands to test your implementation:
+    Some sample commands to test your implementation:
     ```
     getent group
     getent passwd
     getent shadow
     getent group <groupname>
     ```
-   A very basic test config is available that will respond to `getent group` calls with a fake group (see the demo GIF
-   at the top of this file):
-
-       curl -sLo /etc/libnss_shim/config.json https://raw.githubusercontent.com/xenago/libnss_shim/main/default_config/sample_custom_config.json
+    A very basic test config is available that will respond to `getent group` calls with a fake group (see the demo GIF
+    at the top of this file):
+    
+       curl -sLo /etc/libnss_shim/config.json https://raw.githubusercontent.com/xenago/libnss_shim/main/samples/basic/custom_config.json
        getent group | tail -1
-
-   If the installation worked, the output should look like:
-
-       testgroup::1008:fake-username,another-user
+    
+    If the installation worked, the output should look like:
+    
+       test-shim-group::1008:fake-username,another-user
+    
+    A more complex configuration example can be found at [`samples/advanced`](samples/advanced), with a `Dockerfile`.
 
 ## Uninstall
 
@@ -163,7 +165,7 @@ commands run by `libnss_shim`:
 - `<$uid>`
 
 Using only that information, here is the
-[extremely basic test example of `config.json`](default_config/sample_custom_config.json) - one database is defined,
+[extremely basic test example of `config.json`](samples/basic/custom_config.json) - one database is defined,
 `group`, with just a single function, `get_all_entries`:
 
 ```
@@ -172,7 +174,7 @@ Using only that information, here is the
     "group": {
       "functions": {
         "get_all_entries": {
-          "command": "echo 'testgroup::1008:fake-username,another-user'"
+          "command": "echo 'test-shim-group::1008:fake-username,another-user'"
         }
       }
     }
@@ -181,7 +183,7 @@ Using only that information, here is the
 ```
 
 The command defined for `get_all_entries` prints out a single line to `stdout`, describing a fake group
-called `testgroup` with `gid=1008` and two members. That output is then captured by `libss_shim` and returned
+called `test-shim-group` with `gid=1008` and two members. That output is then captured by `libss_shim` and returned
 to `NSS` whenever a call is made requesting all the group entries (e.g. `getent group`).
 
 To support command execution, the following options can be set globally and overridden for specific databases and/or
@@ -359,9 +361,16 @@ and `usize` are platform-dependent and can be 32 or 64-bits):
 
 ## Security
 
-This NSS plugin runs commands defined in the file `/etc/libnss_shim/config.json`, which is only accessible to `root` by
-default. Ensure that this file, the commands defined inside it, and any other related resources remain inaccessible to
-other users, or the system may be vulnerable to privilege escalation attacks.
+This NSS plugin runs commands defined in the file `/etc/libnss_shim/config.json`, which is only writable by the `root` 
+user by default. Ensure that this file, the commands defined inside it, and any other related resources remain read-only
+to other users, or the system may be vulnerable to privilege escalation attacks.
+
+To enable non-root users to access resources defined by `libnss_shim`, they must be able to access the commands defined
+in `config.json`. For example, if a file `script.py` is being used, it will need to be readable (along with the Python 
+interpreter used to run it):
+
+    sudo chown root:root /path/to/custom/script.py
+    sudo chmod 644 /path/to/custom/script.py
 
 It is recommended to pass data (like `<$name>`) using environment variables rather than arguments, except for
 testing purposes. Environment variables are generally private, whereas commands/launch args are not.
