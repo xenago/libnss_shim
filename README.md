@@ -386,9 +386,11 @@ Commands are not passed through a shell for execution. Although it is possible t
 with `libnss_shim`, using a shell is not recommended as this comes with additional risks such as command injection.
 
 To verify artifact attestations for official releases build with GitHub Actions, the [GitHub CLI](https://docs.github.com/en/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds#verifying-artifact-attestations-with-the-github-cli)
-can be used. Note that this is not available for versions `<=1.2.0`. Example command:
+can be used (available for versions `>=1.2.1`). Example command:
 
-    gh attestation verify /set/the/path/to/libnss_shim.deb -R xenago/libnss_shim
+    gh attestation verify /path/to/libnss_shim.deb -R xenago/libnss_shim
+
+SBOM artifacts are produced in CI for each build.
 
 Please report problems by creating GitHub Issues or [private advisories](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability).
 

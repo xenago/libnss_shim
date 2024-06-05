@@ -2,6 +2,7 @@
 - Add note to README about script permissions for users (`group`/`passwd` OK public, `shadow` best private)
 - Add advanced example with scripts for each function and a Dockerfile
 - Migrate to a single configurable build script with CPU architecture detection
+- Explicitly set `contents` permission to `write` in CI
 - From this release onwards, deb packages will have a `-1` version suffix to match RPM
 - Bump `cargo-deb` to `2.2.0`
 - Bump ubuntu build container to `24.04`

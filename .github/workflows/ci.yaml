@@ -12,11 +12,11 @@ jobs:
     # https://github.com/actions/runner-images
     runs-on: ubuntu-24.04
 
-    # Required for attestation
+    # Required for attestation and release
     permissions:
-      id-token: write
-      contents: read
-      attestations: write
+      id-token: write  # attestation requires `write`
+      contents: write  # release requires `write`, attestation requires at least `read`
+      attestations: write  # attestation requires `write`
 
     steps:
 
