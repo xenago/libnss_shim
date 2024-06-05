@@ -58,7 +58,7 @@ to be used with NSS.
     ```
    **AMD64 RPM:**
     ```
-    curl -sLo libnss_shim.rpm https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim-1.2.0-1_x86_64.rpm
+    curl -sLo libnss_shim.rpm https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim-1.2.0-1.x86_64.rpm
     ```
    **Full table:**
 
