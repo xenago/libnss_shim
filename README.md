@@ -54,20 +54,20 @@ to be used with NSS.
 
    **AMD64 deb:**
     ```
-    curl -sLo libnss_shim.deb https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim_1.2.0_amd64.deb
+    curl -sLo libnss_shim.deb https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-1_amd64.deb
     ```
    **AMD64 RPM:**
     ```
-    curl -sLo libnss_shim.rpm https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim-1.2.0-1.x86_64.rpm
+    curl -sLo libnss_shim.rpm https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.x86_64.rpm
     ```
    **Full table:**
 
    | Architecture | Package | Link                                                                                                                               |
    |--------------|---------|------------------------------------------------------------------------------------------------------------------------------------|
-   | `amd64`      | `deb`   | [`libnss_shim_1.2.0_amd64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim_1.2.0_amd64.deb)         |
-   | `amd64`      | `RPM`   | [`libnss_shim-1.2.0-1.x86_64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim-1.2.0-1.x86_64.rpm)   |
-   | `aarch64`    | `deb`   | [`libnss_shim_1.2.0_arm64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim_1.2.0_arm64.deb)         |
-   | `aarch64`    | `RPM`   | [`libnss_shim-1.2.0-1.aarch64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.0/libnss_shim-1.2.0-1.aarch64.rpm) |
+   | `amd64`      | `deb`   | [`libnss_shim_1.2.1-1_amd64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-_amd64.deb)      |
+   | `amd64`      | `RPM`   | [`libnss_shim-1.2.1-1.x86_64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.x86_64.rpm)   |
+   | `aarch64`    | `deb`   | [`libnss_shim_1.2.1-1_arm64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-1_arm64.deb)     |
+   | `aarch64`    | `RPM`   | [`libnss_shim-1.2.1-1.aarch64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.aarch64.rpm) |
 
 3. Install or upgrade it directly with `dpkg` or `rpm`.
 
@@ -389,8 +389,6 @@ To verify artifact attestations for official releases build with GitHub Actions,
 can be used (available for versions `>=1.2.1`). Example command:
 
     gh attestation verify /path/to/libnss_shim.deb -R xenago/libnss_shim
-
-SBOM artifacts are produced in CI for each build.
 
 Please report problems by creating GitHub Issues or [private advisories](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability).
 
