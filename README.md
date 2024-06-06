@@ -1,4 +1,4 @@
-# libnss_shim
+# `libnss_shim`
 
 Respond to [Name Service Switch](https://www.gnu.org/software/libc/manual/html_node/Name-Service-Switch.html) lookups with the output of custom commands. Both JSON and the typical
 colon-separated *nix format are supported.
@@ -78,26 +78,26 @@ to be used with NSS.
    | `aarch64`    | `deb`   | [`libnss_shim_1.2.1-1_arm64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-1_arm64.deb)     |
    | `aarch64`    | `RPM`   | [`libnss_shim-1.2.1-1.aarch64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.aarch64.rpm) |
 
-    See [Downloading](docs?tab=readme-ov-file#installation) and [Attestations](docs?tab=readme-ov-file#installation) in the docs for more
-    details.
+   See [Downloading](docs?tab=readme-ov-file#installation) and [Attestations](docs?tab=readme-ov-file#installation) in the docs for more
+   details.
 
 3. Install or upgrade it directly with `dpkg` or `rpm`.
 
    **deb:**
-    ```
-    sudo dpkg -i libnss_shim.deb
-    ```
+   ```
+   sudo dpkg -i libnss_shim.deb
+   ```
    **RPM:**
-    ```
-    sudo rpm -Uv ./libnss_shim.rpm
-    ```
+   ```
+   sudo rpm -Uv ./libnss_shim.rpm
+   ```
 
 4. Configure the shim by importing a custom `config.json`.
 
    e.g.
-    ```
-    sudo cp custom_config.json /etc/libnss_shim/config.json
-    ```
+   ```
+   sudo cp custom_config.json /etc/libnss_shim/config.json
+   ```
    Using the default `config.json`, `libnss_shim` should have no effect, as the default configuration has commands
    defined that output nothing. Updates to the config take effect immediately and can be performed at any time after
    `libnss_shim` has been installed and used, without restarting.
@@ -110,28 +110,28 @@ to be used with NSS.
    
    Because `nsswitch.conf` is read only once per-process, any software actively using it will need to be restarted to
    access `libnss_shim` when it is installed. Rebooting the system is often the safest/easiest way to do this:
-    ```
-    sudo reboot
-    ```
+   ```
+   sudo reboot
+   ```
 
    See [Interaction with `/etc/nsswitch.conf`](docs?tab=readme-ov-file#interaction-with-etcnsswitchconf) in the docs for details.
 
 6. Perform NSS queries to validate the installation, for example using the built-in `getent` tool.
 
-    Some sample commands to test your implementation:
-    ```
-    getent group
-    getent passwd
-    getent shadow
-    getent group <groupname>
-    ```
-    A very basic test config is available that will respond to `getent group` calls with a fake group (like in the
-    [demo GIF](#demonstration)):
+   Some sample commands to test your implementation:
+   ```
+   getent group
+   getent passwd
+   getent shadow
+   getent group <groupname>
+   ```
+   A very basic test config is available that will respond to `getent group` calls with a fake group (like in the
+   [demo GIF](#demonstration)):
     
        curl -sLo /etc/libnss_shim/config.json https://raw.githubusercontent.com/xenago/libnss_shim/main/samples/basic/custom_config.json
        getent group | tail -1
     
-    If the installation worked, the output should look like:
+   If the installation worked, the output should look like:
     
        test-shim-group::1008:fake-username,another-user
 
@@ -140,15 +140,16 @@ to be used with NSS.
 1. To remove `libnss_shim`, run the same package manager used for installation.
 
    **deb:**
-    ```
-    sudo dpkg -r libnss_shim
-    ```
+   ```
+   sudo dpkg -r libnss_shim
+   ```
    **RPM:**
-    ```
-    sudo rpm -e libnss_shim
-    ```
+   ```
+   sudo rpm -e libnss_shim
+   ```
 
-2. If removed, restarting affected applications is required. A system reboot is an effective way to do this.
+2. As mentioned above, `nsswitch.conf` is read only once per-process so restarting affected applications is required to
+   apply the change. A system reboot is an effective way to do this:
 
    ```
    sudo reboot
@@ -179,5 +180,8 @@ testing purposes. Environment variables are generally private, whereas commands/
 
 Commands are not passed through a shell for execution. Although it is possible to run software like `bash`
 with `libnss_shim`, using a shell is not recommended as this comes with additional risks such as command injection.
+
+See [Attestations](docs?tab=readme-ov-file#attestations) in the docs for information about validating official
+`libnss_shim` release artifacts.
 
 See [SECURITY.md](docs/SECURITY.md) for information about reporting security problems.
