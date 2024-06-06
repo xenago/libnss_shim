@@ -325,6 +325,6 @@ Builds can be run inside temporary containers, like in [CI](../.github/workflows
     * `target/debian/*.deb`
     * `target/generate-rpm/*.rpm`
 
-### Useful resources
+## Useful resources
 
 See [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md)
