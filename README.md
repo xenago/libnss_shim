@@ -114,7 +114,7 @@ to be used with NSS.
     sudo reboot
     ```
 
-   See [Interaction with `/etc/nsswitch.conf`](docs/README.md#interaction-with-etcnsswitchconf) in the docs for details.
+   See [Interaction with `/etc/nsswitch.conf`](docs?tab=readme-ov-file#interaction-with-etcnsswitchconf) in the docs for details.
 
 6. Perform NSS queries to validate the installation, for example using the built-in `getent` tool.
 
