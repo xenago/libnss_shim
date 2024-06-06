@@ -1,1 +1,6 @@
 - Add SBOM to CI release files
+- Add `SECURITY.md`
+- Reorganize documentation and create docs folder
+- Add documentation regarding `nsswitch.conf` following issue #5
+- Migrate reference info to `ACKNOWLEDGMENTS.md`
+- Move demo GIF to `docs/res` along with other images
