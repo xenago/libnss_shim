@@ -11,9 +11,9 @@ defined per-function in `/etc/libnss_shim/config.json`.
 format, or in JSON
 * The output of each command execution is parsed from `stdout` and validated before being passed back
 to NSS
-  * See [Commands](docs/README.md#commands) in the docs for details
+  * See [Commands](docs?tab=readme-ov-file#commands) in the docs for details
 * The `group`, `passwd`, and `shadow` NSS databases/services are supported
-  * See [Configuration](docs/README.md#configuration) in the docs for details
+  * See [Configuration](docs?tab=readme-ov-file#configuration) in the docs for details
 * See the [documentation](docs) for additional information
 
 ## Demonstration
@@ -48,7 +48,7 @@ to be used with NSS.
   - AlmaLinux 8
   - AlmaLinux 9
 - Builds for `amd64` and `aarch64` architectures
-  - See [Development](docs/README.md#development) in the docs for information about building for other architectures
+  - See [Development](docs?tab=readme-ov-file#development) in the docs for information about building for other architectures
 - Packaged in `.deb` and `.rpm` formats
   - If those formats are not supported by a target platform, `libnss_shim` might be usable if the `assets` are installed
     as described in `Cargo.toml` prior to running the `debian/postinst` script, but this has not been tested extensively
@@ -56,7 +56,7 @@ to be used with NSS.
 
 ### Install/Upgrade
 
-1. Prepare the commands/software that will be triggered by `libnss_shim`. See [Commands](docs/README.md#commands) in
+1. Prepare the commands/software that will be triggered by `libnss_shim`. See [Commands](docs?tab=readme-ov-file#commands) in
    the docs for details.
 
 2. Download the [latest release](https://github.com/xenago/libnss_shim/releases/latest) produced by GitHub Actions.
@@ -78,7 +78,7 @@ to be used with NSS.
    | `aarch64`    | `deb`   | [`libnss_shim_1.2.1-1_arm64.deb`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim_1.2.1-1_arm64.deb)     |
    | `aarch64`    | `RPM`   | [`libnss_shim-1.2.1-1.aarch64.rpm`](https://github.com/xenago/libnss_shim/releases/download/1.2.1/libnss_shim-1.2.1-1.aarch64.rpm) |
 
-    See [Downloading](docs/README.md#installation) and [Attestations](docs/README.md#installation) in the docs for more
+    See [Downloading](docs?tab=readme-ov-file#installation) and [Attestations](docs?tab=readme-ov-file#installation) in the docs for more
     details.
 
 3. Install or upgrade it directly with `dpkg` or `rpm`.
@@ -102,7 +102,7 @@ to be used with NSS.
    defined that output nothing. Updates to the config take effect immediately and can be performed at any time after
    `libnss_shim` has been installed and used, without restarting.
 
-   See [Configuration](docs/README.md#configuration) and [Commands](docs/README.md#commands) in the docs for details.
+   See [Configuration](docs?tab=readme-ov-file#configuration) and [Commands](docs?tab=readme-ov-file#commands) in the docs for details.
 
 5. When installed, `libnss_shim` is mapped as `shim` in `/etc/nsswitch.conf` as the last source for all supported
    databases. In that file, the access order for each database's sources can be changed, `shim` can be removed from

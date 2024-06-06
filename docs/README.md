@@ -260,7 +260,7 @@ Originally from [issue #5](https://github.com/xenago/libnss_shim/issues/5#issuec
 No need to return entries if that same content is already present on disk in e.g. `/etc/group`/`etc/passwd`. That is
 taken care of by the existing mappings as set up by the default installation process.
 
-From [`README.md`](https://github.com/xenago/libnss_shim?tab=readme-ov-file#installupgrade):
+From [`README.md`](../?tab=readme-ov-file#installupgrade):
 
 > libnss_shim is mapped as shim in /etc/nsswitch.conf as the last source for all supported databases
 
