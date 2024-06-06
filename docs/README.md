@@ -2,7 +2,7 @@
 
 Additional documentation relevant to use of `libnss_shim`.
 
-### Downloading
+## Downloading
 
 It is also possible to get the latest release URLs using the rate-limited public GitHub API:
 
@@ -250,7 +250,7 @@ and `usize` are platform-dependent and can be 32 or 64-bits):
      record
    - *Note*: The final field, `reserved`, is seemingly unused in practice and is typically omitted
 
-### Interaction with `/etc/nsswitch.conf`
+## Interaction with `/etc/nsswitch.conf`
 
 Originally from [issue #5](https://github.com/xenago/libnss_shim/issues/5#issuecomment-2151243010).
 
