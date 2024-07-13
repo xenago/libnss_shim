@@ -170,7 +170,7 @@ either empty JSON `{}` or nothing at all (other than whitespace/newlines) to `st
 Commands and arguments are split according to POSIX shell syntax, but are not run through a shell, so bash-specific
 syntax will not function. For example, a command such as `program1 && program2` will be interpreted as
 running `program1` with arguments `&&` and `program2`. Although it is not recommended (see the
-[Security section](#security)), it remains possible to run a shell directly, e.g. `sh -c 'program1 && program2'`.
+[Security section](../?tab=readme-ov-file#security)), it remains possible to run a shell directly, e.g. `sh -c 'program1 && program2'`.
 
 Here is the expected JSON format from running each database's supported commands, with types indicated. All numbers are
 expected in base-10 integer form and must fit within the ranges of the indicated numeric  `int` types (`isize`
