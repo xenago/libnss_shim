@@ -1,17 +1,28 @@
 #!/bin/bash
 
+############################
+# libnss_shim build script #
+############################
+
+# Notes:
+#  - This script is intended to be run in a temporary container environment
+#  - Read the libnss_shim docs and the script itself before running it
+#  - Pay careful attention to the available options
+
+########
+
 # Exit immediately on error
 set -e
 
 # Set defaults
 build_libnss_shim=true
-install_rust=true
 install_cargo_deps=true
+install_rust=true
 package_deb=true
 package_rpm=true
 version_number=0.0.0
 
-# Override default settings based on launch arguments
+# Override default options based on launch arguments
 # Idea from https://www.drupal.org/node/244924#script-based-on-guidelines-given-above
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -41,7 +52,7 @@ while [ $# -gt 0 ]; do
 done
 
 # Determine platform and warn if it is unsupported
-echo "BUILD: Detecting architecture"
+echo "BUILD: Detecting architecture..."
 architecture=$(uname -m)
 case $architecture in
   x86_64 | amd64 )
@@ -59,21 +70,26 @@ echo "================"
 # Prep
 if [[ $version_number != "0.0.0" ]]
   then
-    echo "BUILD ${architecture}: Setting version to ${version_number}"
+    echo "BUILD ${architecture}: Setting version in Cargo.toml..."
     sed -i "/^version /s/=.*$/= \"${version_number}\"/" Cargo.toml
+    echo "BUILD ${architecture}: Version set to ${version_number}"
     echo "================"
 fi
 if $install_rust
   then
-    echo "BUILD ${architecture}: Installing Rust"
+    echo "BUILD ${architecture}: Installing Rust..."
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     . "$HOME/.cargo/env"
     echo "================"
 fi
 if $install_cargo_deps
   then
-    echo "BUILD ${architecture}: Installing cargo dependencies"
+    echo "BUILD ${architecture}: Installing cargo dependencies..."
+    # Do not upgrade cargo-deb beyond version 2.2.0 until ready as 2.4.0 has major changes
+    # https://github.com/kornelski/cargo-deb/blob/main/CHANGELOG.md#240
     cargo install --version 2.2.0 cargo-deb
+    # Do not upgrade cargo-generate-rpm beyond version 0.14.0 until ready to drop CentOS 7
+    # https://github.com/cat-in-136/cargo-generate-rpm/releases/tag/v0.15.0
     cargo install --version 0.14.0 cargo-generate-rpm
     echo "================"
 fi
@@ -81,7 +97,7 @@ fi
 # Build
 if $build_libnss_shim
   then
-    echo "BUILD ${architecture}: Building for release"
+    echo "BUILD ${architecture}: Building for release..."
     cargo build --release --verbose
     echo "BUILD ${architecture}: Built for release"
     ls -lah target/release
@@ -91,7 +107,7 @@ fi
 # Packaging
 if $package_deb
   then
-    echo "BUILD ${architecture}: Packaging deb"
+    echo "BUILD ${architecture}: Packaging deb..."
     cargo deb --verbose --no-build
     echo "BUILD ${architecture}: Packaged deb"
     ls -lah target/debian
@@ -99,7 +115,7 @@ if $package_deb
 fi
 if $package_rpm
   then
-    echo "BUILD ${architecture}: Packaging RPM"
+    echo "BUILD ${architecture}: Packaging RPM..."
     cargo generate-rpm --payload-compress none
     echo "BUILD ${architecture}: Packaged RPM"
     ls -lah target/generate-rpm
@@ -127,3 +143,5 @@ fi
 #cargo generate-rpm --payload-compress none --target aarch64-unknown-linux-gnu --auto-req disabled
 #echo "BUILD ARM64: RPM packaged (arm64/aarch64)"
 #ls -lah target/aarch64-unknown-linux-gnu/generate-rpm
+
+echo "BUILD ${architecture}: Complete"

@@ -301,7 +301,7 @@ return the custom value right away and never check the other databases:
 
 ## Development
 
-Builds can be run inside temporary containers, like in [CI](../.github/workflows/ci.yaml):
+Builds should be run inside temporary containers, like in [CI](../.github/workflows/ci.yaml):
 
 1. Ensure Docker is installed and the `docker` command is available to the running user
 
