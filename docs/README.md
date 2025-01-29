@@ -146,7 +146,7 @@ Commands can have input arguments passed as environment variables or as argument
 [Configuration section](#configuration) (such as `<$name>`). To return a response to `libnss_shim`, they can simply
 print a line to `stdout` in the comma-separated *nix format common to `/etc/shadow`, `group`, and `passwd`, or
 alternatively in JSON form as described below. It is important to note that the NSS `compat` options are not supported
-(e.g. `+@netgroup`). Information about the [colon-separated format](https://www.debianhelp.co.uk/passwordfile.htm) used for `group`, `passwd`, etc. on a
+(e.g. `+@netgroup`). Information about the [colon-separated format](https://web.archive.org/web/20240918114429/https://debianhelp.co.uk/passwordfile.htm) used for `group`, `passwd`, etc. on a
 [variety of *nix systems](https://www.ibm.com/docs/en/aix/7.2?topic=passwords-using-etcpasswd-file) is available online.
 
 Although it is best to set all fields explicitly to avoid unexpected issues with default/unset values (nobody wants a
