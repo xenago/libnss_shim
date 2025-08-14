@@ -5,8 +5,8 @@ fn = sys.argv[1]
 
 entries = {
     "test-shim-user-1": "test-shim-user-1:x:2001:2001::/home/test-shim-user-1:/bin/bash",
-    "test-shim-user-2": "test-shim-user-2:x:2002:2002::/home/test-shim-user-1:/bin/bash",
-    "test-shim-user-3": "test-shim-user-3:x:2003:2003::/home/test-shim-user-1:/bin/bash"
+    "test-shim-user-2": "test-shim-user-2:x:2002:2002::/home/test-shim-user-2:/bin/bash",
+    "test-shim-user-3": "test-shim-user-3:x:2003:2003::/home/test-shim-user-3:/bin/bash"
 }
 
 if fn == "--all":
